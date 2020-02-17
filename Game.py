@@ -1,4 +1,5 @@
 import threading
+import time
 
 # TODO: I'll want game logs -> While it's ongoing and at the end
 # TODO: SCORE SYSTEM FOR RANKINGS
@@ -8,21 +9,30 @@ import threading
 # TODO: mini interface pour cliquer
 # TODO: mini interface pour buy des trucs
 
+
 class Game:
     def __init__(self, log_file_path):
         self._players = []
         self.time = 0
+        self.ongoing = False
         self.logfile = log_file_path
 
-    def join_game(self, player):
+        self.server = None
+
+    def add_player(self, player):
         if player not in self._players:
             self._players.append(player)
             return True
         return False
 
+    def add_server(self, server):
+        self.server = server
+
     def start_game(self):
         self.time = 0
+        self.ongoing = True
         self.reset_players()
+        time.sleep(5)
         self._tick()
 
     def _tick(self):
@@ -43,7 +53,7 @@ class Game:
         return list(filter(lambda player: player.is_alive(), self._players))
 
     def log(self):
-        print(f"{self.time}: {[(player.name, player.cookies, player.income) for player in self._players]}")
+        print(f"{self.time}: {[(player.name, player.cookies, player.income, player.hp) for player in self._players]}")
 
     def get_game_state(self):
         # Temporary
@@ -61,6 +71,7 @@ class Game:
 
     def tied_game(self):
         print('everyone is a loser :(')
+        self.ongoing = False
 
     def income_tick(self, players):
         for player in players:

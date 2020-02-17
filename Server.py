@@ -1,16 +1,23 @@
 from collections import deque
+from Game import Game
+from Player import Player
+
 import socket
 import _thread
 import time
 import threading
 
+# TODO: Use json to communicate
+# TODO: refactor en général parce que jesus christ
+
 
 class Server:
-    def __init__(self, game):
+    def __init__(self, log_path):
         self.action_port = 50000
         self.action_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self.action_socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
         self.action_host = socket.gethostname()
+        self.action_socket.bind((self.action_host, self.action_port))
 
         self.game_state_port = 12000
         self.game_state_host = "<broadcast>"
@@ -21,19 +28,31 @@ class Server:
 
         self.queue = deque()
         self.server_on = True
+        self.listening_to_client = True
 
-        self.game = game
+        self.game = Game(log_path)
 
-    @staticmethod
-    def on_new_client(client_socket, addr):
-        #TODO: break out de ça
-        while True:
-            data = client_socket.recv(1024)
+    def on_new_client(self, client_socket, addr):
+        #TODO: fix/connection ends right as the game ends
+        while self.listening_to_client:
+            data = client_socket.recv(1024) # might get stuck here and will never close its socket
             actions = Server.decode_actions(data)
             print(actions)
-            # TODO: do something with actions
+            if not self.game.ongoing:
+                if actions == b"login":
+                    #hardcoded for now
+                    player = Player(f"player{len(self.game._players)}")
+                    self.game.add_player(player)
+                    print('new played logging in')
+                elif actions == b"start":
+                    print('starting game')
+                    self.game.start_game()
 
-        clientsocket.close()
+            else:
+                print(actions)
+                # TODO: do something with actions
+
+        client_socket.close()
 
     @staticmethod
     def decode_actions(data):
@@ -47,29 +66,30 @@ class Server:
         t2 = threading.Thread(target=self.serve_actions)
         t2.start()
 
-    def __start(self):
-        while self.server_on:
-            if self.queue:
-                action = self.queue.pop()
-                action.execute()
-
-    def add_action(self, action):
-        self.queue.appendleft(action)
-
+    # TODO: trouver une manière de ender ça à la fin
     def serve_actions(self):
-        self.action_socket.bind((self.action_host, self.action_port))
         self.action_socket.listen(5)
 
-        #TODO: break out de ça
         while True:
             c, addr = self.action_socket.accept()
             _thread.start_new_thread(self.on_new_client, (c, addr))
         self.action_socket.close()
 
     def serve_game_state_updates(self):
-        while True:
-            #message = bytes(self.game.get_game_state())
+        while not self.game.ongoing:
+            pass
+
+        while self.game.ongoing:
             message = self.game.get_game_state().encode()
             self.game_state_socket.sendto(message, (self.game_state_host, self.game_state_port))
             time.sleep(0.5)
+        message = b"gameover"
+        self.game_state_socket.sendto(message, (self.game_state_host, self.game_state_port))
+        self.game_state_socket.close()
+        self.listening_to_client = False
+
+
+if __name__ == '__main__':
+    server = Server('log.txt')
+    server.start()
 

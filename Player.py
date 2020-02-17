@@ -5,7 +5,7 @@ class Player:
         self.income = 1
         self.cookies = 0
         self.cookie_click_value = 1
-        self.bleed_amount = 1
+        self.bleed_amount = 20
 
     def is_alive(self):
         return self.hp > 0
