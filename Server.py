@@ -6,11 +6,10 @@ import threading
 
 
 class Server:
-    def __init__(self, Game):
-        self.Game = Game
-
+    def __init__(self, game):
         self.action_port = 50000
-        self.action_socket = socket.socket()
+        self.action_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        self.action_socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
         self.action_host = socket.gethostname()
 
         self.game_state_port = 12000
@@ -22,6 +21,8 @@ class Server:
 
         self.queue = deque()
         self.server_on = True
+
+        self.game = game
 
     @staticmethod
     def on_new_client(client_socket, addr):
@@ -67,11 +68,8 @@ class Server:
 
     def serve_game_state_updates(self):
         while True:
-            message = b"game update\n"
+            #message = bytes(self.game.get_game_state())
+            message = self.game.get_game_state().encode()
             self.game_state_socket.sendto(message, (self.game_state_host, self.game_state_port))
             time.sleep(0.5)
 
-
-if __name__ == '__main__':
-    server = Server('')
-    server.start()

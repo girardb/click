@@ -32,15 +32,15 @@ class Client:
     def start_actions_socket(self):
         self.action_socket.connect((self.action_host, self.action_port))
         while True:
-            msg = b"actions"
-            self.action_socket.send(msg)
+            #msg = b"actions"
+            #self.action_socket.send(msg)
             time.sleep(1)
+
 
     @staticmethod
     def decode_game_state(data):
         game_state = data
         return game_state
-
 
 if __name__ == '__main__':
     client = Client()

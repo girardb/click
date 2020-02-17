@@ -2,13 +2,17 @@ import threading
 
 # TODO: I'll want game logs -> While it's ongoing and at the end
 # TODO: SCORE SYSTEM FOR RANKINGS
-
+# TODO: Fix: la clock pour gagner la game va à la même vitesse que la clock de l'income
+# TODO: demande au user de starter la game
+# TODO: fini la game doucement
+# TODO: mini interface pour cliquer
+# TODO: mini interface pour buy des trucs
 
 class Game:
-    def __init__(self, logfile):
+    def __init__(self, log_file_path):
         self._players = []
-        self.timer = 0
-        self.logfile = logfile
+        self.time = 0
+        self.logfile = log_file_path
 
     def join_game(self, player):
         if player not in self._players:
@@ -17,24 +21,37 @@ class Game:
         return False
 
     def start_game(self):
-        self.timer = 0
+        self.time = 0
         self.reset_players()
         self._tick()
 
     def _tick(self):
         players_alive = self.players_alive()
-        if len(players_alive) > 1:
-            self.timer += 1
-            self.income_tick()
+        self.time += 1
+        self.income_tick(players_alive)
+        self.bleed_players(players_alive)
+        self.log()
+        if len(players_alive) >= 1: # Actual line -> len(players_alive > 1)
             tick = threading.Timer(1.0, self._tick)
             tick.start()
         elif not players_alive:
             self.tied_game()
-        else:
-            self.game_won()
+        #else:
+        #    self.game_won()
 
     def players_alive(self):
         return list(filter(lambda player: player.is_alive(), self._players))
+
+    def log(self):
+        print(f"{self.time}: {[(player.name, player.cookies, player.income) for player in self._players]}")
+
+    def get_game_state(self):
+        # Temporary
+        return str([(player.name, player.cookies, player.income, player.hp) for player in self._players])
+
+    def bleed_players(self, players):
+        for player in players:
+            player.bleed()
 
     def reset_players(self):
         pass
@@ -43,10 +60,10 @@ class Game:
         pass
 
     def tied_game(self):
-        pass
+        print('everyone is a loser :(')
 
-    def income_tick(self):
-        for player in filter(lambda _player: _player.is_alive(), self._players):
+    def income_tick(self, players):
+        for player in players:
             player.income_tick()
 
 
