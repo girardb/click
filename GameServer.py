@@ -11,7 +11,7 @@ import threading
 # TODO: refactor en général parce que jesus christ
 
 
-class Server:
+class GameServer:
     def __init__(self, log_path):
         self.action_port = 50000
         self.action_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -30,13 +30,16 @@ class Server:
         self.server_on = True
         self.listening_to_client = True
 
+        self.game = None
+
+    def create_game(self, log_path):
         self.game = Game(log_path)
 
     def on_new_client(self, client_socket, addr):
         #TODO: fix/connection ends right as the game ends
         while self.listening_to_client:
             data = client_socket.recv(1024) # might get stuck here and will never close its socket
-            actions = Server.decode_actions(data)
+            actions = GameServer.decode_actions(data)
             print(actions)
             if not self.game.ongoing:
                 if actions == b"login":
@@ -90,6 +93,6 @@ class Server:
 
 
 if __name__ == '__main__':
-    server = Server('log.txt')
+    server = GameServer('log.txt')
     server.start()
 

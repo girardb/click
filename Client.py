@@ -13,10 +13,12 @@ class Client:
         self.game_state_socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM, socket.IPPROTO_UDP)
         self.game_state_socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEPORT, 1)
         self.game_state_socket.setsockopt(socket.SOL_SOCKET, socket.SO_BROADCAST, 1)
+        self.game_state_socket.bind(("", self.game_state_port))
 
         self.action_port = 50000
         self.action_socket = socket.socket()
         self.action_host = socket.gethostname()
+        self.action_socket.connect((self.action_host, self.action_port))
 
     def send_login(self):
         print('logging in')
@@ -25,6 +27,7 @@ class Client:
         time.sleep(2)
 
     def start_game(self):
+        self.send_start_game()
         self.start = True
         self.ongoing_game = True
 
@@ -41,11 +44,12 @@ class Client:
         t2 = threading.Thread(target=self.start_actions_socket)
         t2.start()
 
-    def start_game_updates_socket(self):
+    def wait_for_game_start(self):
         while not self.start:
             pass
 
-        self.game_state_socket.bind(("", self.game_state_port))
+    def start_game_updates_socket(self):
+        self.wait_for_game_start()
         while self.ongoing_game:
             data, addr = self.game_state_socket.recvfrom(1024)
             game_state = self.decode_data(data)
@@ -55,14 +59,10 @@ class Client:
             else:
                 print(data)
                 # update things
+        self.game_state_socket.close()
 
     def start_actions_socket(self):
-        while not self.start:
-            pass
-
-        self.action_socket.connect((self.action_host, self.action_port))
-        self.send_login()
-        self.send_start_game()
+        self.wait_for_game_start()
         while self.ongoing_game:
             #msg = b"actions"
             #self.action_socket.send(msg)
@@ -79,5 +79,6 @@ class Client:
 if __name__ == '__main__':
     client = Client()
     client.start_sockets()
+    client.send_login()
     client.start_game()
 
