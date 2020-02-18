@@ -48,27 +48,37 @@ class Client:
         while not self.start:
             pass
 
+    def receive_game_state(self):
+        data, addr = self.game_state_socket.recvfrom(1024)
+        return self.decode_data(data)
+
+    @staticmethod
+    def game_is_over(game_state):
+        return game_state == b"gameover"
+
     def start_game_updates_socket(self):
         self.wait_for_game_start()
+
         while self.ongoing_game:
-            data, addr = self.game_state_socket.recvfrom(1024)
-            game_state = self.decode_data(data)
-            if game_state == b"gameover":
+            game_state = self.receive_game_state()
+
+            if not self.game_is_over(game_state):
+                # update things
+                print(game_state)
+
+            elif self.game_is_over(game_state):
                 self.ongoing_game = False
                 print('game over')
-            else:
-                print(data)
-                # update things
+
         self.game_state_socket.close()
 
     def start_actions_socket(self):
         self.wait_for_game_start()
         while self.ongoing_game:
-            #msg = b"actions"
-            #self.action_socket.send(msg)
+            # msg = b"actions"
+            # self.action_socket.send(msg)
             time.sleep(1)
         self.action_socket.close()
-
 
     @staticmethod
     def decode_data(data):
