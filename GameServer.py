@@ -26,6 +26,7 @@ class GameServer:
         self.game_state_socket.settimeout(0.2)
 
         self.game = None
+        self.log_path = log_path
 
     def create_game(self, log_path):
         self.game = Game(log_path)
@@ -33,11 +34,13 @@ class GameServer:
     def listen_before_game_actions(self, client_socket):
         while not self.game.ongoing:
             data = client_socket.recv(1024)
+
             if data == b"login":
                 # hardcoded for now
                 player = Player(f"player{len(self.game._players)}")
                 self.game.add_player(player)
                 print('new played logging in')
+
             elif data == b"start":
                 print('starting game')
                 self.game.start_game()
@@ -63,10 +66,13 @@ class GameServer:
         return actions
 
     def start(self):
+        if self.game is None:
+            self.create_game(self.log_path)
+
         t1 = threading.Thread(target=self.serve_game_state_updates)
         t1.start()
 
-        t2 = threading.Thread(target=self.serve_actions)
+        t2 = threading.Thread(target=self.create_action_socket_threads)
         t2.start()
 
     def create_action_socket_threads(self):
