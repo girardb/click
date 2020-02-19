@@ -1,6 +1,7 @@
 import socket
 import threading
 import time
+import json
 
 
 class Client:
@@ -22,9 +23,10 @@ class Client:
 
     def send_login(self):
         print('logging in')
-        login_message = b"login"
-        self.action_socket.send(login_message)
-        time.sleep(2)
+        login_message = {
+            'type': 'login'
+        }
+        self.action_socket.send(json.dumps(login_message))
 
     def start_game(self):
         self.send_start_game()
@@ -33,9 +35,10 @@ class Client:
 
     def send_start_game(self):
         print('starting game')
-        start_message = b"start"
-        self.action_socket.send(start_message)
-        time.sleep(2)
+        start_message = {
+            'type': 'start'
+        }
+        self.action_socket.send(json.dumps(start_message))
 
     def start_sockets(self):
         t1 = threading.Thread(target=self.start_game_updates_socket)
@@ -54,7 +57,7 @@ class Client:
 
     @staticmethod
     def game_is_over(game_state):
-        return game_state == b"gameover"
+        return game_state['type'] == "game over"
 
     def start_game_updates_socket(self):
         self.wait_for_game_start()
@@ -77,12 +80,12 @@ class Client:
         while self.ongoing_game:
             # msg = b"actions"
             # self.action_socket.send(msg)
-            time.sleep(1)
+            pass
         self.action_socket.close()
 
     @staticmethod
     def decode_data(data):
-        game_state = data
+        game_state = json.loads(data)
         return game_state
 
 

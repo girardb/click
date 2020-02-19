@@ -1,4 +1,3 @@
-from collections import deque
 from Game import Game
 from Player import Player
 
@@ -6,6 +5,7 @@ import socket
 import _thread
 import time
 import threading
+import json
 
 # TODO: Use json to communicate
 
@@ -34,16 +34,20 @@ class GameServer:
     def listen_before_game_actions(self, client_socket):
         while not self.game.ongoing:
             data = client_socket.recv(1024)
-
-            if data == b"login":
+            data = self.decode_data(data)
+            if data['type'] == "login":
                 # hardcoded for now
                 player = Player(f"player{len(self.game._players)}")
                 self.game.add_player(player)
                 print('new played logging in')
 
-            elif data == b"start":
+            elif data['type'] == "start":
                 print('starting game')
                 self.game.start_game()
+
+    @staticmethod
+    def decode_data(data):
+        return json.loads(data)
 
     def listen_for_actions(self, client_socket):
         while self.game.ongoing:
@@ -93,8 +97,10 @@ class GameServer:
         time.sleep(0.5)
 
     def send_game_over(self):
-        message = b"gameover"
-        self.game_state_socket.sendto(message, (self.game_state_host, self.game_state_port))
+        message = {
+            'type': 'game over'
+        }
+        self.game_state_socket.sendto(json.dumps(message), (self.game_state_host, self.game_state_port))
 
     def serve_game_state_updates(self):
         self.wait_for_game_start()
