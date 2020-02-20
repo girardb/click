@@ -7,7 +7,11 @@ import time
 import threading
 import json
 
-# TODO: Use json to communicate
+# TODO: refactor execute + actions decoding + management into its own class
+
+
+class EndGameErrorException(Exception):
+    pass
 
 
 class GameServer:
@@ -23,7 +27,7 @@ class GameServer:
         self.game_state_socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM, socket.IPPROTO_UDP)
         self.game_state_socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEPORT, 1)
         self.game_state_socket.setsockopt(socket.SOL_SOCKET, socket.SO_BROADCAST, 1)
-        self.game_state_socket.settimeout(0.2)
+        self.game_state_socket.settimeout(0.1)
 
         self.game = None
         self.log_path = log_path
@@ -47,27 +51,29 @@ class GameServer:
 
     @staticmethod
     def decode_data(data):
-        return json.loads(data)
+        if data == b'':
+            raise EndGameErrorException()
+        return json.loads(data.decode())
+
+    def execute(self, action):
+        user = action['user'] ####
+        if action['content'] == 'click':
+            self.game.click(user) ####
 
     def listen_for_actions(self, client_socket):
         while self.game.ongoing:
-            data = client_socket.recv(1024)  # might get stuck here and will never close its socket
-            actions = GameServer.decode_actions(data)
-            print(actions)
-
-            # TODO: do something with actions
-            # self.execute_actions(actions)
+            try:
+                data = client_socket.recv(1024)
+                action = GameServer.decode_data(data)
+                self.execute(action)
+            except EndGameErrorException: # TODO: FIX
+                break
 
     def serve_actions(self, client_socket, addr):
         # TODO: connection ends right as the game ends
         self.listen_before_game_actions(client_socket)
         self.listen_for_actions(client_socket)
         client_socket.close()
-
-    @staticmethod
-    def decode_actions(data):
-        actions = data
-        return actions
 
     def start(self):
         if self.game is None:
@@ -98,9 +104,9 @@ class GameServer:
 
     def send_game_over(self):
         message = {
-            'type': 'game over'
+            'gameStatus': False
         }
-        self.game_state_socket.sendto(json.dumps(message), (self.game_state_host, self.game_state_port))
+        self.game_state_socket.sendto(json.dumps(message).encode(), (self.game_state_host, self.game_state_port))
 
     def serve_game_state_updates(self):
         self.wait_for_game_start()

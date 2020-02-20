@@ -1,5 +1,6 @@
 import threading
 import time
+import json
 
 # TODO: I'll want game logs -> While it's ongoing and at the end
 # TODO: SCORE SYSTEM FOR RANKINGS
@@ -56,10 +57,13 @@ class Game:
         print(f"{self.time}: {[(player.name, player.cookies, player.income, player.hp) for player in self._players]}")
 
     def get_game_state(self):
-        # Temporary
-        return str([(player.name, player.cookies, player.income, player.hp) for player in self._players])
+        game_state = {
+            'gameStatus': self.ongoing
+        }
+        return json.dumps(game_state)
 
-    def bleed_players(self, players):
+    @staticmethod
+    def bleed_players(players):
         for player in players:
             player.bleed()
 

@@ -21,12 +21,17 @@ class Client:
         self.action_host = socket.gethostname()
         self.action_socket.connect((self.action_host, self.action_port))
 
+        self.name = 'unnamed'
+
     def send_login(self):
         print('logging in')
         login_message = {
             'type': 'login'
         }
-        self.action_socket.send(json.dumps(login_message))
+        self.action_socket.send(json.dumps(login_message).encode())
+
+    def set_name(self, name):
+        self.name = name
 
     def start_game(self):
         self.send_start_game()
@@ -38,7 +43,7 @@ class Client:
         start_message = {
             'type': 'start'
         }
-        self.action_socket.send(json.dumps(start_message))
+        self.action_socket.send(json.dumps(start_message).encode())
 
     def start_sockets(self):
         t1 = threading.Thread(target=self.start_game_updates_socket)
@@ -57,7 +62,7 @@ class Client:
 
     @staticmethod
     def game_is_over(game_state):
-        return game_state['type'] == "game over"
+        return not game_state['gameStatus']
 
     def start_game_updates_socket(self):
         self.wait_for_game_start()
@@ -72,6 +77,8 @@ class Client:
             elif self.game_is_over(game_state):
                 self.ongoing_game = False
                 print('game over')
+            else:
+                print('other', game_state)
 
         self.game_state_socket.close()
 
@@ -83,9 +90,17 @@ class Client:
             pass
         self.action_socket.close()
 
+    def send_click(self):
+        action = {
+            'type': 'action',
+            'content': 'click',
+            'user': self.name
+        }
+        self.action_socket.send(json.dumps(action).encode())
+
     @staticmethod
     def decode_data(data):
-        game_state = json.loads(data)
+        game_state = json.loads(data.decode())
         return game_state
 
 
