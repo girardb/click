@@ -1,5 +1,5 @@
-from src.game import Game
-from src.game.player import Player
+from src.game.game import Game
+
 
 import socket
 import _thread
@@ -41,8 +41,8 @@ class GameServer:
             data = self.decode_data(data)
             if data['type'] == "login":
                 # hardcoded for now
-                player = Player(f"player{len(self.game._players)}")
-                self.game.add_player(player)
+                username = f"player{len(self.game._players)}"
+                self.game.add_player(username)
                 print('new played logging in')
 
             elif data['type'] == "start":

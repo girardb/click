@@ -2,8 +2,6 @@ import threading
 import time
 import json
 
-from src.game.player import Player
-
 # TODO: I'll want game logs -> While it's ongoing and at the end
 # TODO: SCORE SYSTEM FOR RANKINGS
 # TODO: Fix: la clock pour gagner la game va à la même vitesse que la clock de l'income
@@ -12,7 +10,7 @@ from src.game.player import Player
 
 
 class Game:
-    def __init__(self, log_file_path):
+    def __init__(self, log_file_path='log.txt'):
         self._players = {}
         self.time = 0
         self.ongoing = False
@@ -36,6 +34,8 @@ class Game:
         self.reset_players()
 
     def start_game(self):
+        if not self._players:
+            raise EmptyGameException("The game lobby is empty.")
         self.pregame_setup()
         time.sleep(2)
         self._tick()
@@ -86,6 +86,10 @@ class Game:
     def income_tick(self):
         for player in self._players:
             player.income_tick()
+
+
+class EmptyGameException(Exception):
+    pass
 
 
 if __name__ == '__main__':

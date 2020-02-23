@@ -1,4 +1,4 @@
-from src.client import Client
+from src.client.client import Client
 from functools import partial
 import tkinter as tk
 
