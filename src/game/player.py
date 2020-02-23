@@ -1,6 +1,5 @@
 class Player:
-    def __init__(self, name):
-        self.name = name
+    def __init__(self):
         self.hp = 100
         self.income = 1
         self.cookies = 0

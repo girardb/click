@@ -1,5 +1,5 @@
-from Game import Game
-from Player import Player
+from src.game import Game
+from src.game.player import Player
 
 import socket
 import _thread

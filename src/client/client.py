@@ -23,10 +23,12 @@ class Client:
 
         self.name = 'unnamed'
 
-    def send_login(self):
+    def send_login(self, name):
+        self.set_name(name)
         print('logging in')
         login_message = {
-            'type': 'login'
+            'type': 'login',
+            'user': self.name
         }
         self.action_socket.send(json.dumps(login_message).encode())
 
@@ -107,6 +109,6 @@ class Client:
 if __name__ == '__main__':
     client = Client()
     client.start_sockets()
-    client.send_login()
+    client.send_login('name')
     client.start_game()
 

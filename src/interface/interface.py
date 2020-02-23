@@ -1,4 +1,5 @@
-from Client import Client
+from src.client import Client
+from functools import partial
 import tkinter as tk
 
 
@@ -16,9 +17,16 @@ class Interface:
 
         # input field for player name
 
+        username = tk.StringVar()
+        name_label = tk.Label(master=self.frame_whole_window,
+                              text="Name").grid()
+        name_entry = tk.Entry(master=self.frame_whole_window,
+                              textvariable=username).grid()
+        username.set('unnamed')
+
         login_button = tk.Button(master=self.frame_whole_window,
                                  text="login",
-                                 command=self.client.send_login)
+                                 command=partial(self.client.send_login, name=username))
         login_button.grid()
         start_game_button = tk.Button(master=self.frame_whole_window,
                                       text="start game",
@@ -29,6 +37,7 @@ class Interface:
                                  command=self.client.send_click)
         click_button.grid()
         self.root.mainloop()
+
 
 if __name__ == '__main__':
     app = Interface()
