@@ -48,16 +48,32 @@ class Game:
         self.bleed_players()
         self.log()
 
+    # TODO: finish function lol
+    def is_over(self):
+        players_alive = self.players_alive()
+        if not players_alive:
+            self.tied_game()
+        else:
+            pass
+
     def _tick(self):
         self.single_tick()
         players_alive = self.players_alive()
-        if len(players_alive) >= 1: # Actual line -> len(players_alive > 1)
+        if len(players_alive) > 1:
             tick = threading.Timer(1.0, self._tick)
             tick.start()
         elif not players_alive:
             self.tied_game()
-        #else:
-        #    self.game_won()
+        else:
+            self.game_won()
+
+    def hit(self, from_user, to_user, action):
+        self._players[to_user].get_hit(action['damage'])
+        self._players[from_user].hits(action['damage'])
+        self.action_log()
+
+    def action_log(self):
+        pass
 
     def players_alive(self):
         return list(filter(lambda username: self._players[username].is_alive(), self._players))
@@ -82,6 +98,8 @@ class Game:
         pass
 
     def click(self, username):
+        if username not in self._players:
+            raise NonExistentUserException("This user is not in the current game.")
         self._players[username].click()
 
     def tied_game(self):
@@ -94,6 +112,10 @@ class Game:
 
 
 class EmptyGameException(Exception):
+    pass
+
+
+class NonExistentUserException(Exception):
     pass
 
 

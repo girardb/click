@@ -5,6 +5,7 @@ class Player:
         self.cookies = 0
         self.click_value = 1
         self.bleed_amount = 20
+        self.total_damage_dealt = 0
         self.name = name
 
     def is_alive(self):
@@ -18,3 +19,9 @@ class Player:
 
     def bleed(self):
         self.hp -= self.bleed_amount
+
+    def get_hit(self, damage):
+        self.hp -= damage
+
+    def hits(self, damage):
+        self.total_damage_dealt += damage
