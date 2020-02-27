@@ -89,7 +89,8 @@ class TestTypicalGame(unittest.TestCase):
 
     def create_players(self, nb_players):
         for i in range(nb_players):
-            self.game.add_player(f"player{i}")
+            player = self.game.create_player(f"player{i}")
+            self.game.add_player(player)
 
 
 if __name__ == '__main__':
