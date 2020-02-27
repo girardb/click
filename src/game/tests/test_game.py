@@ -9,13 +9,13 @@ class TestTypicalGame(unittest.TestCase):
         self.game = Game()
 
     def test_no_players(self):
-        self.assertRaises(EmptyGameException, self.game.pregame_setup)
+        self.assertRaises(EmptyGameException, self.game._pregame_setup)
 
     def test_regular_ticks(self):
         nb_players = 3
         nb_turns = 3
         self.create_players(nb_players)
-        self.game.pregame_setup()
+        self.game._pregame_setup()
 
         for i in range(nb_turns):
             self.game.single_tick()
@@ -27,7 +27,7 @@ class TestTypicalGame(unittest.TestCase):
     def test_clicks_existing_user(self):
         nb_players = 3
         self.create_players(nb_players)
-        self.game.pregame_setup()
+        self.game._pregame_setup()
 
         self.game.click('player0')
         self.game.click('player0')
@@ -38,7 +38,7 @@ class TestTypicalGame(unittest.TestCase):
     def test_clicks_non_existent_user(self):
         nb_players = 3
         self.create_players(nb_players)
-        self.game.pregame_setup()
+        self.game._pregame_setup()
 
         self.assertRaises(NonExistentUserException, partial(self.game.click, 'player3'))
 
@@ -46,7 +46,7 @@ class TestTypicalGame(unittest.TestCase):
         nb_turns = 3
         nb_players = 3
         self.create_players(nb_players)
-        self.game.pregame_setup()
+        self.game._pregame_setup()
 
         for i in range(nb_turns):
             self.game.single_tick()
@@ -63,13 +63,13 @@ class TestTypicalGame(unittest.TestCase):
         nb_turns = 3
         nb_players = 3
         self.create_players(nb_players)
-        self.game.pregame_setup()
+        self.game._pregame_setup()
 
         for i in range(nb_turns):
             self.game.single_tick()
 
         action = {
-            'damage': 80
+            'damage': 100
         }
         self.game.hit('player0', 'player1', action)
         self.assertEqual(self.game.players_alive(), ['player0', 'player2'])

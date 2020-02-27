@@ -1,5 +1,5 @@
 class Player:
-    def __init__(self, name='unnamed'):
+    def __init__(self, name):
         self.hp = 100
         self.income = 1
         self.cookies = 0
@@ -7,6 +7,7 @@ class Player:
         self.bleed_amount = 20
         self.total_damage_dealt = 0
         self.name = name
+        self.token = ""
 
     def is_alive(self):
         return self.hp > 0

@@ -6,9 +6,6 @@ from src.game.player import Player
 
 # TODO: I'll want game logs -> While it's ongoing and at the end
 # TODO: SCORE SYSTEM FOR RANKINGS
-# TODO: Fix: la clock pour gagner la game va à la même vitesse que la clock de l'income
-# TODO: mini interface pour cliquer
-# TODO: mini interface pour buy des trucs
 
 
 class Game:
@@ -16,31 +13,32 @@ class Game:
         self._players = {}
         self.time = 0
         self.ongoing = False
-        self.logfile = log_file_path
+        self.log_file_path = log_file_path
 
         self.server = None
 
-    def add_player(self, username):
-        if username not in self._players:
-            new_player = Player(username)
-            self._players[username] = new_player
+    @staticmethod
+    def create_player(username):
+        return Player(username)
+
+    def add_player(self, player):
+        if player.name not in self._players:
+            self._players[player.name] = player
             return True
         return False
 
     def add_server(self, server):
         self.server = server
 
-    def pregame_setup(self):
-        if not self._players:
-            raise EmptyGameException("The game lobby is empty.")
+    def _pregame_setup(self):
+        if len(self._players) < 2:
+            raise EmptyGameException("The game lobby is too empty.")
         self.time = 0
         self.ongoing = True
         self.reset_players()
 
     def start_game(self):
-        self.pregame_setup()
-        time.sleep(2)
-        self._tick()
+        self._pregame_setup()
 
     def single_tick(self):
         self.time += 1
@@ -48,24 +46,8 @@ class Game:
         self.bleed_players()
         self.log()
 
-    # TODO: finish function lol
     def is_over(self):
-        players_alive = self.players_alive()
-        if not players_alive:
-            self.tied_game()
-        else:
-            pass
-
-    def _tick(self):
-        self.single_tick()
-        players_alive = self.players_alive()
-        if len(players_alive) > 1:
-            tick = threading.Timer(1.0, self._tick)
-            tick.start()
-        elif not players_alive:
-            self.tied_game()
-        else:
-            self.game_won()
+        return len(self.players_alive()) <= 1 and self.ongoing
 
     def hit(self, from_user, to_user, action):
         self._players[to_user].get_hit(action['damage'])
@@ -88,14 +70,15 @@ class Game:
         return json.dumps(game_state)
 
     def bleed_players(self):
-        for username in self._players:
-            self._players[username].bleed()
+        for player in self._players.values():
+            player.bleed()
 
     def reset_players(self):
         pass
 
     def game_won(self):
-        pass
+        print(f'{self.players_alive()[0]} won! :O')
+        self.ongoing = False
 
     def click(self, username):
         if username not in self._players:
@@ -107,8 +90,8 @@ class Game:
         self.ongoing = False
 
     def income_tick(self):
-        for username in self._players:
-            self._players[username].income_tick()
+        for player in self._players.values():
+            player.income_tick()
 
 
 class EmptyGameException(Exception):
