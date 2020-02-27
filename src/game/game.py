@@ -1,5 +1,3 @@
-import threading
-import time
 import json
 
 from src.game.player import Player
@@ -32,10 +30,10 @@ class Game:
 
     def _pregame_setup(self):
         if len(self._players) < 2:
-            raise EmptyGameException("The game lobby is too empty.")
+            raise EmptyGameException("Not enough players in the lobby.")
         self.time = 0
-        self.ongoing = True
         self.reset_players()
+        self.ongoing = True
 
     def start_game(self):
         self._pregame_setup()
@@ -46,8 +44,15 @@ class Game:
         self.bleed_players()
         self.log()
 
+        if self.is_over() and not self.players_alive():
+            self.tied_game()
+        elif self.is_over():
+            self.game_won()
+
+        return not self.is_over()
+
     def is_over(self):
-        return len(self.players_alive()) <= 1 and self.ongoing
+        return len(self.players_alive()) <= 1
 
     def hit(self, from_user, to_user, action):
         self._players[to_user].get_hit(action['damage'])
@@ -74,7 +79,8 @@ class Game:
             player.bleed()
 
     def reset_players(self):
-        pass
+        for player in self._players.values():
+            player.reset()
 
     def game_won(self):
         print(f'{self.players_alive()[0]} won! :O')

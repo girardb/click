@@ -1,13 +1,15 @@
 class Player:
     def __init__(self, name):
+        self.reset()
+        self.name = name
+
+    def reset(self):
         self.hp = 100
         self.income = 1
         self.cookies = 0
         self.click_value = 1
         self.bleed_amount = 20
         self.total_damage_dealt = 0
-        self.name = name
-        self.token = ""
 
     def is_alive(self):
         return self.hp > 0
@@ -26,3 +28,5 @@ class Player:
 
     def hits(self, damage):
         self.total_damage_dealt += damage
+
+
