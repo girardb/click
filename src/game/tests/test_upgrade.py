@@ -50,7 +50,7 @@ class TestUpgrades(unittest.TestCase):
 
         self.player.upgrade(self.player.upgrades['Income']['Bronze'])
 
-        self.assertEqual(self.player.income, 2)
+        self.assertEqual(self.player.income, 3)
 
     def test_click_noUpgrades(self):
         self.player.click()

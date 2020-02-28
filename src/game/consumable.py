@@ -1,4 +1,4 @@
-# TODO: Damage from consumables is not added to player.total_damage_dealt
+# TODO: fix/ Damage from consumables is not added to player.total_damage_dealt
 
 
 class Consumable:

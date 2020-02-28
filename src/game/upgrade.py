@@ -1,3 +1,6 @@
+# TODO: fix/ the upgrade needs to be aware of who buys it
+
+
 class Upgrade:
     def __init__(self, name, cost, increase, cost_hike_ratio):
         self.name = name

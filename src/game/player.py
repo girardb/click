@@ -58,6 +58,7 @@ class Player:
     def upgrade(self, upgrade):
         if not upgrade.bought:
             raise NotBoughtException("You need to buy the upgrade before upgrading it.")
+        upgrade.upgrade(self)
 
     def use_item(self, item, target):
         if item.item_count <= 0:
