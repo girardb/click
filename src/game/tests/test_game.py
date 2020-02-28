@@ -73,7 +73,7 @@ class TestTypicalGame(unittest.TestCase):
             'damage': 100
         }
         self.game.hit('player0', 'player1', action)
-        self.assertEqual(self.game.players_alive(), ['player0', 'player2'])
+        self.assertEqual([player.name for player in self.game.players_alive()], ['player0', 'player2'])
         self.assertFalse(self.game._players['player1'].is_alive())
 
     def test_reset_players(self):
