@@ -15,6 +15,7 @@ class TestDrivingGame(unittest.TestCase):
         self.driver.start_game()
 
         self.assertEqual(self.driver.game.players_alive(), [])
+        self.assertFalse(self.driver.game.ongoing)
 
 
 class TestDriver(Driver):

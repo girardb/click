@@ -94,6 +94,14 @@ class TestTypicalGame(unittest.TestCase):
         self.assertTrue(all(True if player.bleed_amount == 20 else False for player in self.game._players.values()))
         self.assertTrue(all(True if player.total_damage_dealt == 0 else False for player in self.game._players.values()))
 
+    def test_add_player(self):
+        username = 'Player0'
+        player = self.game.create_player(username)
+        self.game.add_player(player)
+
+        self.assertTrue(len(self.game._players) == 1)
+        self.assertEqual(self.game._players[username], player)
+
     def test_game_over_one_player_left(self):
         pass
 
