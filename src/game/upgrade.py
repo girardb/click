@@ -1,21 +1,42 @@
 class Upgrade:
-    def __init__(self, name, cost, increase):
+    def __init__(self, name, cost, increase, cost_hike_ratio):
         self.name = name
         self.cost = cost
         self.increase = increase
+        self.cost_hike_ratio = cost_hike_ratio
         self.level = 0
         self.bought = False
 
-    def buy(self):
-        raise NotImplementedError()
+    def buy(self, player):
+        if self.bought:
+            raise AlreadyBoughtException("You have already bought this item.")
 
-    def upgrade(self):
+        self.bought = True
+        self.upgrade(player)
+
+    def upgrade(self, player):
         raise NotImplementedError()
 
 
 class IncomeUpgrade(Upgrade):
-    pass
+    def upgrade(self, player):
+        player.income += self.increase
+        player.cookies -= self.cost
+        self.level += 1
+        self.cost *= self.cost_hike_ratio
 
 
 class ClickUpgrade(Upgrade):
+    def upgrade(self, player):
+        player.click_value += self.increase
+        player.cookies -= self.cost
+        self.level += 1
+        self.cost *= self.cost_hike_ratio
+
+
+class AlreadyBoughtException(Exception):
+    pass
+
+
+class NotBoughtException(Exception):
     pass

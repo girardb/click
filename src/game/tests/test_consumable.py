@@ -9,6 +9,9 @@ class TestConsumables(unittest.TestCase):
         game = Game()
         self.player = game.create_player("Player0")
 
+    def test_initialize_consumables(self):
+        pass
+
     def test_buyPotion_notEnoughCoins(self):
         pass
 
@@ -26,6 +29,7 @@ class TestConsumables(unittest.TestCase):
 
     def test_useDamagePotion_potionsInInventory(self):
         pass
+
 
 if __name__ == '__main__':
     unittest.main()
