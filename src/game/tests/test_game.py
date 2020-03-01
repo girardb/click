@@ -8,7 +8,7 @@ class TestTypicalGame(unittest.TestCase):
     def setUp(self) -> None:
         self.game = Game()
 
-    def test_one_players(self):
+    def test_one_player(self):
         create_players(self.game, 1)
         self.assertRaises(EmptyGameException, self.game.start_game)
 
@@ -43,7 +43,7 @@ class TestTypicalGame(unittest.TestCase):
 
         self.assertRaises(NonExistentUserException, partial(self.game.click, 'player3'))
 
-    def test_click_and_ticks(self):
+    def test_clicks_and_ticks(self):
         nb_turns = 3
         nb_players = 3
         create_players(self.game, nb_players)
@@ -73,7 +73,7 @@ class TestTypicalGame(unittest.TestCase):
             'damage': 100
         }
         self.game.hit('player0', 'player1', action)
-        self.assertEqual(self.game.players_alive(), ['player0', 'player2'])
+        self.assertEqual([player.name for player in self.game.players_alive()], ['player0', 'player2'])
         self.assertFalse(self.game._players['player1'].is_alive())
 
     def test_reset_players(self):

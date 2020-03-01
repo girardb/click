@@ -63,7 +63,7 @@ class Game:
         pass
 
     def players_alive(self):
-        return list(filter(lambda username: self._players[username].is_alive(), self._players))
+        return list(filter(lambda player: player.is_alive(), self._players.values()))
 
     def log(self):
         print(f"{self.time}: {[(player.name, player.cookies, player.income, player.hp) for username, player in self._players.items()]}")
@@ -75,7 +75,7 @@ class Game:
         return json.dumps(game_state)
 
     def bleed_players(self):
-        for player in self._players.values():
+        for player in self.players_alive():
             player.bleed()
 
     def reset_players(self):
@@ -96,7 +96,7 @@ class Game:
         self.ongoing = False
 
     def income_tick(self):
-        for player in self._players.values():
+        for player in self.players_alive():
             player.income_tick()
 
 
