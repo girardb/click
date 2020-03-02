@@ -13,7 +13,7 @@ class TestPlayer(unittest.TestCase):
         self.assertEqual(self.player.hp, 100)
         self.assertEqual(self.player.base_income, 1)
         self.assertEqual(self.player.cookies, 0)
-        self.assertEqual(self.player.click_value, 1)
+        self.assertEqual(self.player.base_click_value, 1)
         self.assertEqual(self.player.bleed_amount, 20)
         self.assertEqual(self.player.total_damage_dealt, 0)
 

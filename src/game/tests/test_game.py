@@ -88,9 +88,9 @@ class TestTypicalGame(unittest.TestCase):
         self.game.reset_players()
 
         self.assertTrue(all(True if player.hp == 100 else False for player in self.game._players.values()))
-        self.assertTrue(all(True if player.income == 1 else False for player in self.game._players.values()))
+        self.assertTrue(all(True if player.get_income() == 1 else False for player in self.game._players.values()))
         self.assertTrue(all(True if player.cookies == 0 else False for player in self.game._players.values()))
-        self.assertTrue(all(True if player.click_value == 1 else False for player in self.game._players.values()))
+        self.assertTrue(all(True if player.get_click_value() == 1 else False for player in self.game._players.values()))
         self.assertTrue(all(True if player.bleed_amount == 20 else False for player in self.game._players.values()))
         self.assertTrue(all(True if player.total_damage_dealt == 0 else False for player in self.game._players.values()))
 

@@ -50,13 +50,13 @@ class TestUpgrades(unittest.TestCase):
 
         self.player.upgrade(self.player.upgrades['Income']['Bronze'])
 
-        self.assertEqual(self.player.income, 3)
+        self.assertEqual(self.player.get_income(), 3)
 
     def test_click_noUpgrades(self):
         self.player.click()
 
         self.assertEqual(self.player.cookies, 1)
-        self.assertEqual(self.player.click_value, 1)
+        self.assertEqual(self.player.get_click_value(), 1)
 
     def test_click_withUpgrades(self):
         for i in range(15):
@@ -66,13 +66,13 @@ class TestUpgrades(unittest.TestCase):
         self.player.click()
 
         self.assertEqual(self.player.cookies, 2)
-        self.assertEqual(self.player.click_value, 2)
+        self.assertEqual(self.player.get_click_value(), 2)
 
     def test_income_noUpgrade(self):
         self.player.income_tick()
 
         self.assertEqual(self.player.cookies, 1)
-        self.assertEqual(self.player.income, 1)
+        self.assertEqual(self.player.get_income(), 1)
 
     def test_income_withUpgrades(self):
         for i in range(15):
@@ -82,7 +82,7 @@ class TestUpgrades(unittest.TestCase):
         self.player.income_tick()
 
         self.assertEqual(self.player.cookies, 2)
-        self.assertEqual(self.player.income, 2)
+        self.assertEqual(self.player.get_income(), 2)
 
 
 if __name__ == '__main__':

@@ -8,7 +8,7 @@ class Upgrade:
         self.base_increase = increase
         self.cost_hike_ratio = cost_hike_ratio
         self.level = 0
-        self.increase = 0
+        self.increase = increase
         self.bought = False
 
     def buy(self):
