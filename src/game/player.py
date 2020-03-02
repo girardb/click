@@ -11,7 +11,7 @@ class Player:
         self.max_hp = 100
         self.hp = 100
         self.base_income = 1
-        self.cookies = 0
+        self.coins = 0
         self.base_click_value = 1
         self.bleed_amount = 20
         self.total_damage_dealt = 0
@@ -44,10 +44,10 @@ class Player:
         return self.base_income + upgrade_income
 
     def income_tick(self):
-        self.cookies += self.get_income()
+        self.coins += self.get_income()
 
     def click(self):
-        self.cookies += self.get_click_value()
+        self.coins += self.get_click_value()
 
     def bleed(self):
         self.hp -= self.bleed_amount
@@ -59,15 +59,15 @@ class Player:
         self.total_damage_dealt += damage
 
     def buy_item(self, item):
-        if self.cookies < item.cost:
+        if self.coins < item.cost:
             raise NotEnoughCoinsException(f"Not enough coins to buy {item.name}.")
-        self.cookies -= item.cost
+        self.coins -= item.cost
         item.buy()
 
     def upgrade(self, upgrade):
         if not upgrade.bought:
             raise NotBoughtException("You need to buy the upgrade before upgrading it.")
-        self.cookies -= upgrade.cost
+        self.coins -= upgrade.cost
         upgrade.upgrade()
 
     def use_item(self, item, target):
