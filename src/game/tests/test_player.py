@@ -11,7 +11,7 @@ class TestPlayer(unittest.TestCase):
     def test_init(self):
         self.assertEqual(self.player.name, "Player0")
         self.assertEqual(self.player.hp, 100)
-        self.assertEqual(self.player.income, 1)
+        self.assertEqual(self.player.base_income, 1)
         self.assertEqual(self.player.cookies, 0)
         self.assertEqual(self.player.click_value, 1)
         self.assertEqual(self.player.bleed_amount, 20)
