@@ -22,7 +22,7 @@ class TestTypicalGame(unittest.TestCase):
             self.game.single_tick()
 
         self.assertEqual(len(self.game.players_alive()), nb_players)
-        self.assertEqual([self.game._players[username].cookies for username in self.game._players], [3, 3, 3])
+        self.assertEqual([self.game._players[username].coins for username in self.game._players], [3, 3, 3])
         self.assertTrue(self.game.ongoing)
 
     def test_clicks_existing_user(self):
@@ -34,7 +34,7 @@ class TestTypicalGame(unittest.TestCase):
         self.game.click('player0')
 
         self.assertEqual(len(self.game.players_alive()), nb_players)
-        self.assertEqual([self.game._players[username].cookies for username in self.game._players], [2, 0, 0])
+        self.assertEqual([self.game._players[username].coins for username in self.game._players], [2, 0, 0])
 
     def test_clicks_non_existent_user(self):
         nb_players = 3
@@ -58,7 +58,7 @@ class TestTypicalGame(unittest.TestCase):
         self.game.click('player1')
 
         self.assertEqual(len(self.game.players_alive()), nb_players)
-        self.assertEqual([self.game._players[username].cookies for username in self.game._players], [4, 6, 3])
+        self.assertEqual([self.game._players[username].coins for username in self.game._players], [4, 6, 3])
 
     def test_player_dies(self):
         nb_turns = 3
@@ -89,7 +89,7 @@ class TestTypicalGame(unittest.TestCase):
 
         self.assertTrue(all(True if player.hp == 100 else False for player in self.game._players.values()))
         self.assertTrue(all(True if player.get_income() == 1 else False for player in self.game._players.values()))
-        self.assertTrue(all(True if player.cookies == 0 else False for player in self.game._players.values()))
+        self.assertTrue(all(True if player.coins == 0 else False for player in self.game._players.values()))
         self.assertTrue(all(True if player.get_click_value() == 1 else False for player in self.game._players.values()))
         self.assertTrue(all(True if player.bleed_amount == 20 else False for player in self.game._players.values()))
         self.assertTrue(all(True if player.total_damage_dealt == 0 else False for player in self.game._players.values()))

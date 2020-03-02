@@ -66,7 +66,7 @@ class Game:
         return list(filter(lambda player: player.is_alive(), self._players.values()))
 
     def log(self):
-        print(f"{self.time}: {[(player.name, player.cookies, player.get_income(), player.hp) for username, player in self._players.items()]}")
+        print(f"{self.time}: {[(player.name, player.coins, player.get_income(), player.hp) for username, player in self._players.items()]}")
 
     def get_game_state(self):
         game_state = {
