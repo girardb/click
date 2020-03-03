@@ -8,8 +8,7 @@ class Consumable:
         self.effect = effect
         self.item_count = 0
 
-    def buy(self, player):
-        player.cookies -= self.cost
+    def buy(self):
         self.item_count += 1
 
     def use(self, target):
@@ -21,7 +20,6 @@ class HealingPotion(Consumable):
         target.hp += self.effect
         if target.hp > target.max_hp:
             target.hp = target.max_hp
-
         self.item_count -= 1
 
 
@@ -30,7 +28,6 @@ class DamagePotion(Consumable):
         target.hp += self.effect
         if target.hp < 0:
             target.hp = 0
-
         self.item_count -= 1
 
 

@@ -28,7 +28,7 @@ class TestConsumables(unittest.TestCase):
 
         self.player.buy_item(self.player.consumables['Potion']['Healing'])
 
-        self.assertEqual(self.player.cookies, 0)
+        self.assertEqual(self.player.coins, 0)
         self.assertEqual(self.player.consumables['Potion']['Healing'].item_count, 1)
 
     def test_useHealingPotion_noPotionsInInventory(self):
