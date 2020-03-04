@@ -26,7 +26,7 @@ class TestMap(unittest.TestCase):
     def test_every_starting_area_is_the_same(self):
         pass
 
-    def test_all_rooms_are_connected(self):
+    def test_all_rooms_are_reachable(self):
         pass
 
 

@@ -61,6 +61,15 @@ class TestPlayer(unittest.TestCase):
     def test_is_alive(self):
         self.assertTrue(self.player.is_alive())
 
+    def test_player_knows_which_room_he_is_in(self):
+        pass
+
+    def test_player_knows_which_rooms_he_has_visited(self):
+        pass
+
+    def test_player_can_change_rooms(self):
+        pass
+
 
 if __name__ == '__main__':
     unittest.main()
