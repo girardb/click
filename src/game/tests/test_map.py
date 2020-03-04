@@ -29,6 +29,9 @@ class TestMap(unittest.TestCase):
     def test_all_rooms_are_reachable(self):
         pass
 
+    def test_player_changes_room(self):
+        pass
+
 
 if __name__ == '__main__':
     unittest.main()
