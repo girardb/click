@@ -15,6 +15,8 @@ class Player:
         self.click_value = 1
         self.bleed_amount = 20
         self.total_damage_dealt = 0
+        self.current_room = None
+        self.visited_rooms = set()
 
         self.upgrades = {
             'Income': {
@@ -64,6 +66,13 @@ class Player:
         if item.item_count <= 0:
             raise ItemNotInInventoryException("This item is not in your inventory.")
         item.use(target)
+
+    def enter_room(self, room):
+        if self.current_room is not None:
+            self.current_room.remove_player(self)
+        self.current_room = room
+        self.current_room.add_player(self)
+        self.visited_rooms.add(self.current_room)
 
 
 class NotEnoughCoinsException(Exception):

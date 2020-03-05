@@ -1,12 +1,21 @@
 import unittest
 
 from src.game.player import Player
+from src.game.game import *
 
 
 class TestPlayer(unittest.TestCase):
     def setUp(self) -> None:
-        name = "Player0"
-        self.player = Player(name)
+        self.game = Game()
+
+        name0 = "Player0"
+        name1 = "Player1"
+        self.player = Player(name0)
+        player1 = Player(name1)
+
+        self.game.add_player(self.player)
+        self.game.add_player(player1)
+        self.game.start_game()
 
     def test_init(self):
         self.assertEqual(self.player.name, "Player0")
@@ -62,13 +71,28 @@ class TestPlayer(unittest.TestCase):
         self.assertTrue(self.player.is_alive())
 
     def test_player_knows_which_room_he_is_in(self):
-        pass
+        self.assertNotEqual(self.player.current_room, None)
 
     def test_player_knows_which_rooms_he_has_visited(self):
-        pass
+        visited_rooms = set()
+        visited_rooms.add(self.player.current_room)
 
-    def test_player_can_change_rooms(self):
-        pass
+        for i in range(10):
+            random_neighbor_room = random.sample(self.player.current_room.neighboring_rooms, 1)[0]
+            self.player.enter_room(random_neighbor_room)
+            visited_rooms.add(random_neighbor_room)
+
+        self.assertEqual(self.player.visited_rooms, visited_rooms)
+
+    def test_player_enters_room(self):
+        old_room = self.player.current_room
+
+        neighboring_room = [room for room in self.player.current_room.neighboring_rooms][0]
+
+        self.player.enter_room(neighboring_room)
+
+        self.assertEqual(self.player.current_room, neighboring_room)
+        self.assertNotEqual(self.player.current_room, old_room)
 
 
 if __name__ == '__main__':

@@ -1,11 +1,17 @@
 import unittest
 from src.game.room import *
+from src.game.player import *
+from src.game.game import *
 
 
 class TestRoom(unittest.TestCase):
     def setUp(self) -> None:
-        # create a game and get a room
-        pass
+        self.game = Game()
+        self.player0 = Player('player0')
+        self.player1 = Player('player1')
+        self.game.add_player(self.player0)
+        self.game.add_player(self.player1)
+        self.game.start_game()
 
     def test_bonus_correctly_applied_to_player_inside_room(self):
         pass
@@ -27,6 +33,15 @@ class TestRoom(unittest.TestCase):
 
     def test_player_unfilled_room(self):
         pass
+
+    def test_player_enters_room(self):
+        old_room = self.player0.current_room
+        new_room = [room for room in self.player0.current_room.neighboring_rooms][0]
+
+        self.player0.enter_room(new_room)
+
+        self.assertEqual(self.player0.current_room, new_room)
+        self.assertNotEqual(self.player0.current_room, old_room)
 
     # def test_lock_room(self):
     #     pass

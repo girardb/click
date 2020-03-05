@@ -19,8 +19,9 @@ class Room:
         self.players.remove(player)
 
     # Add test
-    def add_neighboring_room(self, other_room):
+    def connect_with(self, other_room):
         self.neighboring_rooms.add(other_room)
+        other_room.neighboring_rooms.add(self)
 
     # Add multiple tests
     @staticmethod

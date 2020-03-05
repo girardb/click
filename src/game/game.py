@@ -1,6 +1,7 @@
 import json
 
 from src.game.player import Player
+from src.game.map import *
 
 # TODO: I'll want game logs -> While it's ongoing and at the end
 # TODO: SCORE SYSTEM FOR RANKINGS
@@ -34,6 +35,7 @@ class Game:
         self.time = 0
         self.reset_players()
         self.ongoing = True
+        self.map = Map(list(self._players.values()))
 
     def start_game(self):
         self._pregame_setup()

@@ -12,10 +12,10 @@ class TestMap(unittest.TestCase):
 
     def test_at_game_start_every_player_is_placed_in_a_room_and_is_alone(self):
         for room in self.game.map.rooms:
-            self.assertTrue(len(room.get_players()) <= 1)
+            self.assertTrue(len(room.players) <= 1)
 
-        for player in self.game._players:
-            self.assertTrue(player.room is not None)
+        for player in self.game._players.values():
+            self.assertTrue(player.current_room is not None)
 
     def test_every_starting_area_is_not_connected_to_another_starting_area(self):
         pass
