@@ -45,17 +45,20 @@ class TestMap(unittest.TestCase):
 
         self.assertEqual(len(visited_rooms), len(self.game.map.rooms))
 
-    def test_number_of_rooms_is_appropriate_for_number_of_players(self):
-        pass
-
     def test_every_starting_area_is_the_same(self):
-        pass
+        starting_areas = list(filter(lambda room: room.room_difficulty == 'starting_area', self.game.map.rooms))
 
-    def test_all_rooms_are_reachable(self):
-        pass
+        nb_players = [len(room.players) for room in starting_areas]
+        self.assertTrue(len(set(nb_players)) == 1)
 
-    def test_player_changes_room(self):
-        pass
+        click_bonuses = [room.click_bonus for room in starting_areas]
+        self.assertTrue(len(set(click_bonuses)) == 1)
+
+        income_bonuses = [room.income_bonus for room in starting_areas]
+        self.assertTrue(len(set(income_bonuses)) == 1)
+
+        room_sizes = [room.room_size for room in starting_areas]
+        self.assertTrue(len(set(room_sizes)) == 1)
 
 
 if __name__ == '__main__':

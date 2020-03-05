@@ -57,8 +57,7 @@ class Game:
         return len(self.players_alive()) <= 1
 
     def hit(self, from_user, to_user, action):
-        self._players[to_user].get_hit(action['damage'])
-        self._players[from_user].hits(action['damage'])
+        self._players[from_user].hits(self._players[to_user], action['damage'])
         self.action_log()
 
     def action_log(self):

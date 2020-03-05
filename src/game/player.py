@@ -37,11 +37,13 @@ class Player:
     def is_alive(self):
         return self.hp > 0
 
+    # Can become a bottleneck. Need to cache that in some way.
     def get_click_value(self):
         item_click_value = sum(item.increase if item.bought else 0 for item in self.upgrades['Click'].values())
         room_click_value = self.current_room.click_bonus
         return self.base_click_value + item_click_value + room_click_value
 
+    # Can become a bottleneck. Need to cache that in some way.
     def get_income(self):
         upgrade_income = sum(item.increase if item.bought else 0 for item in self.upgrades['Income'].values())
         room_income = self.current_room.income_bonus
@@ -59,8 +61,12 @@ class Player:
     def get_hit(self, damage):
         self.hp -= damage
 
-    def hits(self, damage):
+    # Should probably not take damage as input and calculate it from base_damage attributes or something
+    def hits(self, target, damage):
+        if target not in self.get_surrounding_players():
+            raise PlayerNotInRoomException("This player is not in the same room as you.")
         self.total_damage_dealt += damage
+        target.get_hit(damage)
 
     def buy_item(self, item):
         if self.coins < item.cost:
@@ -77,8 +83,14 @@ class Player:
     def use_item(self, item, target):
         if item.item_count <= 0:
             raise ItemNotInInventoryException("This item is not in your inventory.")
+
+        if target not in self.get_surrounding_players():
+            raise PlayerNotInRoomException("This player isn't in the same room as you.")
+
         item.use(target)
 
+    # Should add that you need to be in an adjacent room to be able to enter it
+    # Should add that you can't enter the room you're already in
     def enter_room(self, room):
         if self.current_room is not None:
             self.current_room.remove_player(self)
@@ -86,6 +98,14 @@ class Player:
         self.current_room.add_player(self)
         self.visited_rooms.add(self.current_room)
 
+    def get_surrounding_players(self):
+        return self.current_room.players
+
 
 class NotEnoughCoinsException(Exception):
     pass
+
+
+class PlayerNotInRoomException(Exception):
+    pass
+

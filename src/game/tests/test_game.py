@@ -10,6 +10,8 @@ class TestTypicalGame(unittest.TestCase):
         nb_players = 3
         create_players(self.game, nb_players)
         self.game.start_game()
+        for player in self.game._players.values():
+            player.enter_room(self.game._players['player0'].current_room)
 
     def test_one_player(self):
         self.game = Game()

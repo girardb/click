@@ -11,11 +11,12 @@ class TestPlayer(unittest.TestCase):
         name0 = "Player0"
         name1 = "Player1"
         self.player = Player(name0)
-        player1 = Player(name1)
+        self.player1 = Player(name1)
 
         self.game.add_player(self.player)
-        self.game.add_player(player1)
+        self.game.add_player(self.player1)
         self.game.start_game()
+        self.player1.enter_room(self.player.current_room)
 
     def test_init(self):
         self.assertEqual(self.player.name, "Player0")
@@ -31,7 +32,7 @@ class TestPlayer(unittest.TestCase):
         self.player.click()
         self.player.income_tick()
         self.player.get_hit(10)
-        self.player.hits(10)
+        self.player.hits(self.player1, 10)
 
         self.player.reset()
 
@@ -58,7 +59,7 @@ class TestPlayer(unittest.TestCase):
         self.assertEqual(self.player.hp, 90)
 
     def test_deals_damage(self):
-        self.player.hits(10)
+        self.player.hits(self.player1, 10)
 
         self.assertEqual(self.player.total_damage_dealt, 10)
 

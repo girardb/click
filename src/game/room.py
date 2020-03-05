@@ -10,15 +10,12 @@ class Room:
         self.neighboring_rooms = set()
         self.discovered = False
 
-    # Add test
     def add_player(self, player):
         self.players.add(player)
 
-    # Add test
     def remove_player(self, player):
         self.players.remove(player)
 
-    # Add test
     def connect_with(self, other_room):
         self.neighboring_rooms.add(other_room)
         other_room.neighboring_rooms.add(self)

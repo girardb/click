@@ -11,6 +11,11 @@ class TestConsumables(unittest.TestCase):
     def setUp(self) -> None:
         game = Game()
         self.player = game.create_player("Player0")
+        self.player1 = game.create_player("Player1")
+        game.add_player(self.player)
+        game.add_player(self.player1)
+        game.start_game()
+        self.player1.enter_room(self.player.current_room)
 
     def test_initialize_consumables(self):
         self.assertTrue(self.player.consumables)
