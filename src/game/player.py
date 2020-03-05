@@ -39,11 +39,13 @@ class Player:
 
     def get_click_value(self):
         item_click_value = sum(item.increase if item.bought else 0 for item in self.upgrades['Click'].values())
-        return self.base_click_value + item_click_value
+        room_click_value = self.current_room.click_bonus
+        return self.base_click_value + item_click_value + room_click_value
 
     def get_income(self):
         upgrade_income = sum(item.increase if item.bought else 0 for item in self.upgrades['Income'].values())
-        return self.base_income + upgrade_income
+        room_income = self.current_room.income_bonus
+        return self.base_income + upgrade_income + room_income
 
     def income_tick(self):
         self.coins += self.get_income()

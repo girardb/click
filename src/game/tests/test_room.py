@@ -14,7 +14,8 @@ class TestRoom(unittest.TestCase):
         self.game.start_game()
 
     def test_bonus_correctly_applied_to_player_inside_room(self):
-        pass
+        self.assertEqual(self.player0.get_income(), self.player0.base_income + self.player0.current_room.income_bonus)
+        self.assertEqual(self.player0.get_click_value(), self.player0.base_click_value + self.player0.current_room.click_bonus)
 
     def test_a_player_can_only_see_the_players_in_his_room(self):
         pass

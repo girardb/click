@@ -40,7 +40,7 @@ class TestPlayer(unittest.TestCase):
     def test_income_tick(self):
         self.player.income_tick()
 
-        self.assertEqual(self.player.coins, 1)
+        self.assertEqual(self.player.coins, 1 + self.player.current_room.income_bonus)
 
     def test_bleed_tick(self):
         self.player.bleed()
@@ -50,7 +50,7 @@ class TestPlayer(unittest.TestCase):
     def test_click(self):
         self.player.click()
 
-        self.assertEqual(self.player.coins, 1)
+        self.assertEqual(self.player.coins, 1 + self.player.current_room.click_bonus)
 
     def test_dealt_damage(self):
         self.player.get_hit(10)

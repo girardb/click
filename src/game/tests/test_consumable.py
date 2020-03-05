@@ -24,7 +24,7 @@ class TestConsumables(unittest.TestCase):
         self.assertRaises(NotEnoughCoinsException, partial(self.player.buy_item, self.player.consumables['Potion']['Healing']))
 
     def test_buyPotion_enoughCoins(self):
-        self.get_money(10)
+        self.player.coins = 10
 
         self.player.buy_item(self.player.consumables['Potion']['Healing'])
 
@@ -35,7 +35,7 @@ class TestConsumables(unittest.TestCase):
         self.assertRaises(ItemNotInInventoryException, partial(self.player.use_item, self.player.consumables['Potion']['Healing'], self.player))
 
     def test_useHealingPotion_potionsInInventory(self):
-        self.get_money(10)
+        self.player.coins = 10
         self.player.buy_item(self.player.consumables['Potion']['Healing'])
         self.player.get_hit(20)
 
@@ -47,7 +47,7 @@ class TestConsumables(unittest.TestCase):
         self.assertEqual(self.player.consumables['Potion']['Healing'].item_count, 0)
 
     def test_useHealingPotion_dontOverheal(self):
-        self.get_money(10)
+        self.player.coins = 10
         self.player.buy_item(self.player.consumables['Potion']['Healing'])
         self.player.get_hit(5)
 
@@ -62,7 +62,7 @@ class TestConsumables(unittest.TestCase):
         self.assertRaises(ItemNotInInventoryException, partial(self.player.use_item, self.player.consumables['Potion']['Damage'], self.player))
 
     def test_useDamagePotion_potionsInInventory(self):
-        self.get_money(10)
+        self.player.coins = 10
         self.player.buy_item(self.player.consumables['Potion']['Damage'])
         self.assertEqual(self.player.hp, 100)
 
@@ -72,7 +72,7 @@ class TestConsumables(unittest.TestCase):
         self.assertEqual(self.player.consumables['Potion']['Damage'].item_count, 0)
 
     def test_useDamagePotion_dontOverkill(self):
-        self.get_money(10)
+        self.player.coins = 10
         self.player.buy_item(self.player.consumables['Potion']['Damage'])
         self.player.get_hit(95)
         self.assertEqual(self.player.hp, 5)
@@ -83,9 +83,6 @@ class TestConsumables(unittest.TestCase):
         self.assertEqual(self.player.consumables['Potion']['Damage'].item_count, 0)
         self.assertFalse(self.player.is_alive())
 
-    def get_money(self, amount):
-        for i in range(amount):
-            self.player.click()
 
 if __name__ == '__main__':
     unittest.main()

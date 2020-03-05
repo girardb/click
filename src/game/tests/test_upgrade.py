@@ -11,6 +11,10 @@ class TestUpgrades(unittest.TestCase):
     def setUp(self) -> None:
         game = Game()
         self.player = game.create_player("Player0")
+        player1 = game.create_player('Player1')
+        game.add_player(self.player)
+        game.add_player(player1)
+        game.start_game()
 
     def test_initialize_upgrades(self):
         self.assertTrue(self.player.upgrades)
@@ -50,39 +54,45 @@ class TestUpgrades(unittest.TestCase):
 
         self.player.upgrade(self.player.upgrades['Income']['Bronze'])
 
-        self.assertEqual(self.player.get_income(), 3)
+        self.assertEqual(self.player.get_income(), 2 + self.player.base_income + self.player.current_room.income_bonus)
 
     def test_click_noUpgrades(self):
         self.player.click()
 
-        self.assertEqual(self.player.coins, 1)
-        self.assertEqual(self.player.get_click_value(), 1)
+        self.assertEqual(self.player.coins, self.player.base_click_value + self.player.current_room.click_bonus)
+        self.assertEqual(self.player.get_click_value(), self.player.base_click_value + self.player.current_room.click_bonus)
 
     def test_click_withUpgrades(self):
         for i in range(15):
             self.player.click()
         self.player.buy_item(self.player.upgrades['Click']['Bronze'])
 
+        # Reset coins
+        self.player.coins = 0
+
         self.player.click()
 
-        self.assertEqual(self.player.coins, 2)
-        self.assertEqual(self.player.get_click_value(), 2)
+        self.assertEqual(self.player.coins, 1 + self.player.base_click_value + self.player.current_room.click_bonus)
+        self.assertEqual(self.player.get_click_value(), 1 + self.player.base_click_value + self.player.current_room.click_bonus)
 
     def test_income_noUpgrade(self):
         self.player.income_tick()
 
-        self.assertEqual(self.player.coins, 1)
-        self.assertEqual(self.player.get_income(), 1)
+        self.assertEqual(self.player.coins, self.player.base_income + self.player.current_room.income_bonus)
+        self.assertEqual(self.player.get_income(), self.player.base_income + self.player.current_room.income_bonus)
 
     def test_income_withUpgrades(self):
         for i in range(15):
             self.player.click()
         self.player.buy_item(self.player.upgrades['Income']['Bronze'])
 
+        # Reset coins
+        self.player.coins = 0
+
         self.player.income_tick()
 
-        self.assertEqual(self.player.coins, 2)
-        self.assertEqual(self.player.get_income(), 2)
+        self.assertEqual(self.player.coins, 1 + self.player.base_income + self.player.current_room.income_bonus)
+        self.assertEqual(self.player.get_income(), 1 + self.player.base_income + self.player.current_room.income_bonus)
 
 
 if __name__ == '__main__':
