@@ -30,7 +30,7 @@ class Map:
             other_room = random.sample(non_starting_area_rooms, 1)[0]
             room.connect_with(other_room)
 
-            players[i].current_room = room
+            players[i].enter_room(room)
             room.add_player(players[i])
             starting_area_rooms.append(room)
         return starting_area_rooms
@@ -50,9 +50,9 @@ class Map:
         return non_starting_area_rooms
 
     def connect_rooms(self):
-        other_rooms = list(filter(lambda room: room.type != 'starting_area', self.rooms))
+        other_rooms = list(filter(lambda room: room.room_difficulty != 'starting_area', self.rooms))
         for room in self.rooms:
-            if room.type == 'starting_area':
+            if room.room_difficulty == 'starting_area':
                 connections = random.sample(other_rooms, self.nb_generate_room_connections)
                 for other_room in connections:
                     room.connect_with(other_room)

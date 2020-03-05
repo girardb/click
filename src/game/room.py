@@ -3,7 +3,7 @@ import random
 
 class Room:
     def __init__(self, room_difficulty):
-        self.type = type
+        self.room_difficulty = room_difficulty
         self.click_bonus, self.income_bonus, self.room_size = self.get_room_data_from_difficulty(room_difficulty)
 
         self.players = set()
