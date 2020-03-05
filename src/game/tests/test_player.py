@@ -20,9 +20,9 @@ class TestPlayer(unittest.TestCase):
     def test_init(self):
         self.assertEqual(self.player.name, "Player0")
         self.assertEqual(self.player.hp, 100)
-        self.assertEqual(self.player.income, 1)
-        self.assertEqual(self.player.cookies, 0)
-        self.assertEqual(self.player.click_value, 1)
+        self.assertEqual(self.player.base_income, 1)
+        self.assertEqual(self.player.coins, 0)
+        self.assertEqual(self.player.base_click_value, 1)
         self.assertEqual(self.player.bleed_amount, 20)
         self.assertEqual(self.player.total_damage_dealt, 0)
 
@@ -40,7 +40,7 @@ class TestPlayer(unittest.TestCase):
     def test_income_tick(self):
         self.player.income_tick()
 
-        self.assertEqual(self.player.cookies, 1)
+        self.assertEqual(self.player.coins, 1)
 
     def test_bleed_tick(self):
         self.player.bleed()
@@ -50,7 +50,7 @@ class TestPlayer(unittest.TestCase):
     def test_click(self):
         self.player.click()
 
-        self.assertEqual(self.player.cookies, 1)
+        self.assertEqual(self.player.coins, 1)
 
     def test_dealt_damage(self):
         self.player.get_hit(10)
