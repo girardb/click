@@ -82,7 +82,7 @@ class TestTypicalGame(unittest.TestCase):
         self.assertTrue(all(True if player.base_income == 1 else False for player in self.game._players.values()))
         self.assertTrue(all(True if player.coins == 0 else False for player in self.game._players.values()))
         self.assertTrue(all(True if player.base_click_value == 1 else False for player in self.game._players.values()))
-        self.assertTrue(all(True if player.bleed_amount == 20 else False for player in self.game._players.values()))
+        self.assertTrue(all(True if player.bleed_amount == 0 else False for player in self.game._players.values()))
         self.assertTrue(all(True if player.total_damage_dealt == 0 else False for player in self.game._players.values()))
         self.assertTrue(all(True if player.current_room is None else False for player in self.game._players.values()))
         self.assertTrue(all(True if all_items_arent_bought(player) else False for player in self.game._players.values()))
@@ -96,17 +96,51 @@ class TestTypicalGame(unittest.TestCase):
         self.assertTrue(len(self.game._players) == 1)
         self.assertEqual(self.game._players[username], player)
 
-    def test_game_over_one_player_left(self):
-        pass
+    def test_zone_shrinks_over_time(self):
+        zone_range = self.game.map.zone.distance_to_be_affected
+        for i in range(59):
+            self.game.single_tick()
+        self.assertEqual(self.game.map.zone.distance_to_be_affected, zone_range)
 
-    def test_game_over_tied_game(self):
-        pass
+        self.game.single_tick()
+        self.assertEqual(self.game.map.zone.distance_to_be_affected, zone_range-1)
 
-    def test_dead_player_cant_hit(self):
-        pass
+    def test_tied_game(self):
+        player0_room = self.game._players['player0'].current_room
+        for player in self.game._players.values():
+            player.enter_room(player0_room)
 
-    def test_dead_player_cant_click(self):
-        pass
+        while self.game.single_tick():
+            pass
+
+        self.assertEqual(len(self.game.players_alive()), 0)
+        self.assertFalse(self.game.ongoing)
+
+    def test_game_won(self):
+        final_room = self.game.map.zone.final_room
+        neighbor_room = list(final_room.neighboring_rooms)[0]
+        for player in self.game._players.values():
+            player.enter_room(neighbor_room)
+        self.game._players['player0'].enter_room(final_room)
+
+        while self.game.single_tick():
+            pass
+
+        self.assertEqual(len(self.game.players_alive()), 1)
+        self.assertEqual(self.game.players_alive()[0], self.game._players['player0'])
+        self.assertFalse(self.game.ongoing)
+
+    # def test_game_over_one_player_left(self):
+    #     pass
+    #
+    # def test_game_over_tied_game(self):
+    #     pass
+    #
+    # def test_dead_player_cant_hit(self):
+    #     pass
+    #
+    # def test_dead_player_cant_click(self):
+    #     pass
 
 
 def create_players(game, nb_players):

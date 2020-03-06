@@ -44,6 +44,7 @@ class Game:
         self.time += 1
         self.income_tick()
         self.bleed_players()
+        self.map.zone.update_zone(self.time)
         self.log()
 
         if self.is_over() and not self.players_alive():

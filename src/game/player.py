@@ -13,7 +13,7 @@ class Player:
         self.base_income = 1
         self.coins = 0
         self.base_click_value = 1
-        self.bleed_amount = 20
+        self.bleed_amount = 0
         self.total_damage_dealt = 0
         self.current_room = None
         self.visited_rooms = set()
@@ -56,7 +56,7 @@ class Player:
         self.coins += self.get_click_value()
 
     def bleed(self):
-        self.hp -= self.bleed_amount
+        self.hp -= self.current_room.damage + self.bleed_amount
 
     def get_hit(self, damage):
         self.hp -= damage
@@ -95,7 +95,7 @@ class Player:
         if self.current_room is not None:
             self.current_room.remove_player(self)
         self.current_room = room
-        self.current_room.add_player(self)
+        self.current_room._add_player(self)
         self.visited_rooms.add(self.current_room)
 
     def get_surrounding_players(self):

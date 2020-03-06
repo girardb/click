@@ -1,6 +1,5 @@
 import unittest
 
-from src.game.player import Player
 from src.game.game import *
 
 
@@ -24,7 +23,7 @@ class TestPlayer(unittest.TestCase):
         self.assertEqual(self.player.base_income, 1)
         self.assertEqual(self.player.coins, 0)
         self.assertEqual(self.player.base_click_value, 1)
-        self.assertEqual(self.player.bleed_amount, 20)
+        self.assertEqual(self.player.bleed_amount, 0)
         self.assertEqual(self.player.total_damage_dealt, 0)
 
     def test_reset(self):
@@ -43,10 +42,26 @@ class TestPlayer(unittest.TestCase):
 
         self.assertEqual(self.player.coins, 1 + self.player.current_room.income_bonus)
 
-    def test_bleed_tick(self):
+    def test_bleed_damage_tick(self):
+        self.player.bleed_amount = 10
+        self.player.current_room.damage = 0
+        self.player.bleed()
+
+        self.assertEqual(self.player.hp, 90)
+
+    def test_bleed_zone_tick(self):
+        self.player.bleed_amount = 0
+        self.player.current_room.damage = 20
         self.player.bleed()
 
         self.assertEqual(self.player.hp, 80)
+
+    def test_bleed_zone_and_damage_tick(self):
+        self.player.bleed_amount = 10
+        self.player.current_room.damage = 20
+        self.player.bleed()
+
+        self.assertEqual(self.player.hp, 70)
 
     def test_click(self):
         self.player.click()

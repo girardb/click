@@ -10,11 +10,9 @@ class TestDrivingGame(unittest.TestCase):
         game = Game()
         self.driver = TestDriver(game)
 
-    def test_game_over(self):
+    def test_game_is_over(self):
         create_players(self.driver.game, 3)
         self.driver.start_game()
-
-        self.assertEqual(self.driver.game.players_alive(), [])
         self.assertFalse(self.driver.game.ongoing)
 
 
