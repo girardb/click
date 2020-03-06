@@ -43,9 +43,7 @@ class Game:
     def single_tick(self):
         self.time += 1
         self.income_tick()
-        # deal zone damage
         self.bleed_players()
-        # update zone
         self.map.zone.update_zone(self.time)
         self.log()
 
