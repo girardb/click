@@ -29,11 +29,12 @@ class Zone:
 
     def affect_rooms(self):
         for room in self.get_affected_rooms():
-            room.isInZone = True
+            room.damage = self.damage
 
     def update_zone(self, time):
         if time % 60 == 0 and self.distance_to_be_affected > 0:
             self.distance_to_be_affected -= 1
+        self.affect_rooms()
 
 # Add driver test to check if the zone shrinks over time
 # Every time the zone shrinks I could pick a new final_room from the unaffected rooms

@@ -33,7 +33,7 @@ class Map:
             room.connect_with(other_room)
 
             players[i].enter_room(room)
-            room.add_player(players[i])
+            room._add_player(players[i])
             starting_area_rooms.append(room)
         return starting_area_rooms
 

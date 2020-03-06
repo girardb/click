@@ -17,7 +17,7 @@ class TestRoom(unittest.TestCase):
     # Using this method, a user is present in two rooms at once
     def test_add_player(self):
         room = self.player0.current_room
-        room.add_player(self.player1)
+        room._add_player(self.player1)
 
         self.assertEqual(len(room.players), 2)
         self.assertTrue(self.player0 in room.players)

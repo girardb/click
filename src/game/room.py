@@ -9,9 +9,9 @@ class Room:
         self.players = set()
         self.neighboring_rooms = set()
         self.discovered = False
-        self.isInZone = False
+        self.damage = 0
 
-    def add_player(self, player):
+    def _add_player(self, player):
         self.players.add(player)
 
     def remove_player(self, player):

@@ -17,16 +17,16 @@ class TestZone(unittest.TestCase):
 
         for room in self.game.map.rooms:
             if room == self.game.map.zone.final_room:
-                self.assertFalse(room.isInZone)
+                self.assertFalse(room.damage)
             else:
-                self.assertTrue(room.isInZone)
+                self.assertTrue(room.damage)
 
     def test_all_rooms_are_affected(self):
         self.game.map.zone.distance_to_be_affected = 0
         self.game.map.zone.affect_rooms()
 
         for room in self.game.map.rooms:
-            self.assertTrue(room.isInZone)
+            self.assertTrue(room.damage)
 
     # Unless the map is really big
     def test_no_room_is_affected(self):
@@ -34,7 +34,7 @@ class TestZone(unittest.TestCase):
         self.game.map.zone.affect_rooms()
 
         for room in self.game.map.rooms:
-            self.assertFalse(room.isInZone)
+            self.assertFalse(room.damage)
 
     # # Create a dummy map and test the distances on it
     # def test_verify_bfs_distance(self):

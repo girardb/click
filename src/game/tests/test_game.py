@@ -82,7 +82,7 @@ class TestTypicalGame(unittest.TestCase):
         self.assertTrue(all(True if player.base_income == 1 else False for player in self.game._players.values()))
         self.assertTrue(all(True if player.coins == 0 else False for player in self.game._players.values()))
         self.assertTrue(all(True if player.base_click_value == 1 else False for player in self.game._players.values()))
-        self.assertTrue(all(True if player.bleed_amount == 20 else False for player in self.game._players.values()))
+        self.assertTrue(all(True if player.bleed_amount == 0 else False for player in self.game._players.values()))
         self.assertTrue(all(True if player.total_damage_dealt == 0 else False for player in self.game._players.values()))
         self.assertTrue(all(True if player.current_room is None else False for player in self.game._players.values()))
         self.assertTrue(all(True if all_items_arent_bought(player) else False for player in self.game._players.values()))

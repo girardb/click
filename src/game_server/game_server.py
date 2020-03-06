@@ -42,7 +42,7 @@ class GameServer:
             if data['type'] == "login":
                 # hardcoded for now
                 username = f"player{len(self.game._players)}"
-                self.game.add_player(username)
+                self.game._add_player(username)
                 print('new played logging in')
 
             elif data['type'] == "start":
