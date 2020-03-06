@@ -1,5 +1,4 @@
 import unittest
-from src.game.room import *
 from src.game.player import *
 from src.game.game import *
 from functools import partial
@@ -113,6 +112,8 @@ class TestRoom(unittest.TestCase):
     #
     # def test_place_furniture_in_a_filled_room_throws(self):
     #     pass
+    # Should add that you need to be in an adjacent room to be able to enter it
+    # Should add that you can't enter the room you're already in
 
 
 if __name__ == '__main__':

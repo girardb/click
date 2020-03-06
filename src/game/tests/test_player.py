@@ -1,6 +1,5 @@
 import unittest
 
-from src.game.player import Player
 from src.game.game import *
 
 

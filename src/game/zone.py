@@ -36,7 +36,6 @@ class Zone:
             self.distance_to_be_affected -= 1
         self.affect_rooms()
 
-# Add driver test to check if the zone shrinks over time
 # Every time the zone shrinks I could pick a new final_room from the unaffected rooms
 # Need to be able to show the current affected rooms
 # Need to be able to show the rooms that are going to be affected in the next cycle so the players can react.
