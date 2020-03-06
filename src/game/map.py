@@ -1,6 +1,7 @@
 import random
 
 from src.game.room import Room
+from src.game.zone import Zone
 
 
 class Map:
@@ -9,6 +10,7 @@ class Map:
         self.nb_generate_room_connections = room_connections
         self.rooms = self.generate_rooms(players)
         self.connect_rooms()
+        self.zone = Zone(random.choice(self.rooms))
 
     def generate_rooms(self, players):
         nb_players = len(players)

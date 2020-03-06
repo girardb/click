@@ -21,6 +21,7 @@ class Zone:
             for neighbor in node.room.neighboring_rooms:
                 if neighbor not in visited_rooms:
                     queue.append(self.Node(neighbor, node.distance+1))
+                    visited_rooms.add(neighbor)
             if node.distance >= self.distance_to_be_affected:
                 affected_rooms.append(node.room)
 
@@ -30,4 +31,12 @@ class Zone:
         for room in self.get_affected_rooms():
             room.isInZone = True
 
+    def update_zone(self, time):
+        if time % 60 == 0 and self.distance_to_be_affected > 0:
+            self.distance_to_be_affected -= 1
+
 # Add driver test to check if the zone shrinks over time
+# Every time the zone shrinks I could pick a new final_room from the unaffected rooms
+# Need to be able to show the current affected rooms
+# Need to be able to show the rooms that are going to be affected in the next cycle so the players can react.
+
