@@ -9,6 +9,7 @@ class Room:
         self.players = set()
         self.neighboring_rooms = set()
         self.discovered = False
+        self.isInZone = False
 
     def add_player(self, player):
         self.players.add(player)
