@@ -3,6 +3,8 @@ import threading
 import time
 import json
 
+from src.interface.client_player import ClientPlayer
+
 
 class Client:
     def __init__(self):
@@ -20,20 +22,16 @@ class Client:
         self.action_socket = socket.socket()
         self.action_host = socket.gethostname()
         self.action_socket.connect((self.action_host, self.action_port))
+        self.player = None
 
-        self.name = 'unnamed'
-
-    def send_login(self, name):
-        self.set_name(name)
+    def send_login(self, username):
+        self.player = ClientPlayer(username)
         print('logging in')
         login_message = {
             'type': 'login',
-            'user': self.name
+            'user': self.player.name
         }
         self.action_socket.send(json.dumps(login_message).encode())
-
-    def set_name(self, name):
-        self.name = name
 
     def start_game(self):
         self.send_start_game()
@@ -46,6 +44,15 @@ class Client:
             'type': 'start'
         }
         self.action_socket.send(json.dumps(start_message).encode())
+
+    def send_click(self):
+        action = {
+            'type': 'action',
+            'content': 'click',
+            'user': self.player.name
+        }
+        print('send_click')
+        self.action_socket.send(json.dumps(action).encode())
 
     def start_sockets(self):
         t1 = threading.Thread(target=self.start_game_updates_socket)
@@ -91,14 +98,6 @@ class Client:
             # self.action_socket.send(msg)
             pass
         self.action_socket.close()
-
-    def send_click(self):
-        action = {
-            'type': 'action',
-            'content': 'click',
-            'user': self.name
-        }
-        self.action_socket.send(json.dumps(action).encode())
 
     @staticmethod
     def decode_data(data):

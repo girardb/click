@@ -1,4 +1,5 @@
 from src.game.game import Game
+from src.game.driver import ProdDriver
 
 
 import socket
@@ -29,25 +30,28 @@ class GameServer:
         self.game_state_socket.setsockopt(socket.SOL_SOCKET, socket.SO_BROADCAST, 1)
         self.game_state_socket.settimeout(0.1)
 
-        self.game = None
+        self.driver = None
         self.log_path = log_path
 
     def create_game(self, log_path):
-        self.game = Game(log_path)
+        game = Game(log_path)
+        self.driver = ProdDriver(game)
 
     def listen_before_game_actions(self, client_socket):
-        while not self.game.ongoing:
+        while not self.driver.game.ongoing:
             data = client_socket.recv(1024)
             data = self.decode_data(data)
             if data['type'] == "login":
                 # hardcoded for now
-                username = f"player{len(self.game._players)}"
-                self.game._add_player(username)
+                username = f"player{len(self.driver.game._players)}"
+                player = self.driver.game.create_player(username)
+                self.driver.game.add_player(player)
                 print('new played logging in')
 
             elif data['type'] == "start":
                 print('starting game')
-                self.game.start_game()
+                t = threading.Thread(target=self.driver.start_game)
+                t.start()
 
     @staticmethod
     def decode_data(data):
@@ -56,12 +60,14 @@ class GameServer:
         return json.loads(data.decode())
 
     def execute(self, action):
-        user = action['user'] ####
+        print(action)
+        user = action['user']
         if action['content'] == 'click':
-            self.game.click(user) ####
+            print('yes it is a click')
+            self.driver.game.click(user)
 
     def listen_for_actions(self, client_socket):
-        while self.game.ongoing:
+        while self.driver.game.ongoing:
             try:
                 data = client_socket.recv(1024)
                 action = GameServer.decode_data(data)
@@ -76,7 +82,7 @@ class GameServer:
         client_socket.close()
 
     def start(self):
-        if self.game is None:
+        if self.driver is None:
             self.create_game(self.log_path)
 
         t1 = threading.Thread(target=self.serve_game_state_updates)
@@ -88,17 +94,17 @@ class GameServer:
     def create_action_socket_threads(self):
         self.action_socket.listen(5)
 
-        while not self.game.ongoing:
+        while not self.driver.game.ongoing:
             c, addr = self.action_socket.accept()
             _thread.start_new_thread(self.serve_actions, (c, addr))
         self.action_socket.close()
 
     def wait_for_game_start(self):
-        while not self.game.ongoing:
+        while not self.driver.game.ongoing:
             pass
 
     def send_game_state(self):
-        message = self.game.get_game_state().encode()
+        message = self.driver.game.get_game_state().encode()
         self.game_state_socket.sendto(message, (self.game_state_host, self.game_state_port))
         time.sleep(0.5)
 
@@ -111,7 +117,7 @@ class GameServer:
     def serve_game_state_updates(self):
         self.wait_for_game_start()
 
-        while self.game.ongoing:
+        while self.driver.game.ongoing:
             self.send_game_state()
 
         self.send_game_over()
