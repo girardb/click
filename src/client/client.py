@@ -51,23 +51,56 @@ class Client:
             'content': 'click',
             'user': self.player.name
         }
-        print('send_click')
         self.action_socket.send(json.dumps(action).encode())
 
-    def send_buy_item(self):
-        pass
+    def send_hits(self, target):
+        action = {
+            'type': 'action',
+            'content': 'hits',
+            'target': target,
+            'user': self.player.name
+        }
+        self.action_socket.send(json.dumps(action).encode())
 
-    def send_buy_item(self):
-        pass
+    def send_buy_item(self, item_type, item_effect):
+        action = {
+            'type': 'buy',
+            'content': 'buy',
+            'item_type': item_type,
+            'item_effect': item_effect,
+            'user': self.player.name
+        }
+        self.action_socket.send(json.dumps(action).encode())
 
-    def send_buy_item(self):
-        pass
+    def send_upgrade(self, upgrade_type, upgrade_level):
+        action = {
+            'type': 'action',
+            'content': 'upgrade',
+            'upgrade_type': upgrade_type,
+            'upgrade_level': upgrade_level,
+            'user': self.player.name
+        }
+        self.action_socket.send(json.dumps(action).encode())
 
-    def send_buy_item(self):
-        pass
+    def send_use_item(self, target, item_type, item_effect):
+        action = {
+            'type': 'action',
+            'content': 'use_item',
+            'target': target,
+            'item_type': item_type,
+            'item_effect': item_effect,
+            'user': self.player.name
+        }
+        self.action_socket.send(json.dumps(action).encode())
 
-    def send_buy_item(self):
-        pass
+    def send_enter_room(self, room_index):
+        action = {
+            'type': 'action',
+            'content': 'enter_room',
+            'room_index': room_index,
+            'user': self.player.name
+        }
+        self.action_socket.send(json.dumps(action).encode())
 
     def start_sockets(self):
         t1 = threading.Thread(target=self.start_game_updates_socket)

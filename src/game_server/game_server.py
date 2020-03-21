@@ -73,14 +73,12 @@ class GameServer:
             target = self.driver.game._players[target_username] ###
             damage = 10 ###
             player.hits(target, damage)
-            pass
 
         elif action['content'] == 'buy':
             item_type = action['item_type']
             item_effect = action['item_effect']
             item = player.consumables[item_type][item_effect]
             player.buy_item(item)
-            pass
 
         elif action['content'] == 'upgrade':
             upgrade_type = action['upgrade_type']
