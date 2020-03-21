@@ -54,6 +54,21 @@ class Client:
         print('send_click')
         self.action_socket.send(json.dumps(action).encode())
 
+    def send_buy_item(self):
+        pass
+
+    def send_buy_item(self):
+        pass
+
+    def send_buy_item(self):
+        pass
+
+    def send_buy_item(self):
+        pass
+
+    def send_buy_item(self):
+        pass
+
     def start_sockets(self):
         t1 = threading.Thread(target=self.start_game_updates_socket)
         t1.start()

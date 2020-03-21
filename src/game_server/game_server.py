@@ -59,12 +59,46 @@ class GameServer:
             raise EndGameErrorException()
         return json.loads(data.decode())
 
+    # TODO: checker si architecturellement ca fait du sens de faire cette logique là ici
+    # changer le nom de 'content' à de quoi de plus représentatif
     def execute(self, action):
-        print(action)
-        user = action['user']
+        username = action['user']
+        player = self.driver.game._players[username]
+
         if action['content'] == 'click':
-            print('yes it is a click')
-            self.driver.game.click(user)
+            self.driver.game.click(username)
+
+        elif action['content'] == 'hits':
+            target_username = action['target']
+            target = self.driver.game._players[target_username] ###
+            damage = 10 ###
+            player.hits(target, damage)
+            pass
+
+        elif action['content'] == 'buy':
+            item_type = action['item_type']
+            item_effect = action['item_effect']
+            item = player.consumables[item_type][item_effect]
+            player.buy_item(item)
+            pass
+
+        elif action['content'] == 'upgrade':
+            upgrade_type = action['upgrade_type']
+            upgrade_level = action['upgrade_level']
+            upgrade = player.upgrades[upgrade_type][upgrade_level]
+            player.upgrade(upgrade)
+
+        elif action['content'] == 'use_item':
+            target_username = action['target']
+            item_type = action['item_type']
+            item_effect = action['item_effect']
+            item = player.consumables[item_type][item_effect]
+            player.use_item(item, target_username)
+
+        elif action['content'] == 'enter_room':
+            room_index = action['room_index'] # eventually change to room_name
+            room = self.driver.game.map.rooms[room_index]
+            player.enter_room(room)
 
     def listen_for_actions(self, client_socket):
         while self.driver.game.ongoing:
