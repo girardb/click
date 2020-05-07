@@ -19,7 +19,7 @@ class ProdDriver(Driver):
     Runs 'real' games
     """
     def _play_game(self):
-        while self.game.single_tick():
+        while self.game.custom_tick():
             time.sleep(1)
 
 

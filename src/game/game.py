@@ -41,25 +41,11 @@ class Game:
     def start_game(self):
         self._pregame_setup()
 
-    def custom_tick(self, nb_ticks):
+    def custom_tick(self, nb_ticks=1):
         self.time += nb_ticks
         self.income_tick(nb_ticks)
         self.bleed_players(nb_ticks)
         self.map.zone.update_zone(math.floor(self.time + nb_ticks))
-        self.log()
-
-        if self.is_over() and not self.players_alive():
-            self.tied_game()
-        elif self.is_over():
-            self.game_won()
-
-        return not self.is_over()
-
-    def single_tick(self):
-        self.time += 1
-        self.income_tick()
-        self.bleed_players()
-        self.map.zone.update_zone(self.time)
         self.log()
 
         if self.is_over() and not self.players_alive():

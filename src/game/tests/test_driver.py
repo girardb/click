@@ -21,7 +21,7 @@ class TestDriver(Driver):
     Runs game for tests
     """
     def _play_game(self):
-        while self.game.single_tick():
+        while self.game.custom_tick():
             pass
 
 
