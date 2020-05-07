@@ -71,8 +71,7 @@ class GameServer:
         elif action['content'] == 'hits':
             target_username = action['target']
             target = self.driver.game._players[target_username] ###
-            damage = 10 ###
-            player.hits(target, damage)
+            player.hits(target)
 
         elif action['content'] == 'buy':
             item_type = action['item_type']
