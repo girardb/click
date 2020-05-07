@@ -19,8 +19,13 @@ class ProdDriver(Driver):
     Runs 'real' games
     """
     def _play_game(self):
-        while self.game.custom_tick():
-            time.sleep(1)
+        next_tick = self.ticks_per_second
+        while True:
+            time_before_tick = time.time()
+            ongoing_game = self.game.custom_tick(next_tick)
+            if not ongoing_game:
+                break
+            next_tick = (time.time() - time_before_tick) * self.ticks_per_second
 
 
 class PlaybackDriver:

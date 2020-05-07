@@ -45,7 +45,7 @@ class Game:
         self.time += nb_ticks
         self.income_tick(nb_ticks)
         self.bleed_players(nb_ticks)
-        self.map.zone.update_zone(math.floor(self.time + nb_ticks))
+        self.map.zone.update_zone(math.floor(self.time))
         self.log()
 
         if self.is_over() and not self.players_alive():

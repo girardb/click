@@ -22,7 +22,7 @@ class TestTypicalGame(unittest.TestCase):
         nb_turns = 3
 
         for i in range(nb_turns):
-            self.game.single_tick()
+            self.game.custom_tick()
 
         self.assertEqual(len(self.game.players_alive()), 3)
         self.assertEqual([player.coins for player in self.game._players.values()], [nb_turns*(1 + player.current_room.income_bonus) for player in self.game._players.values()])
@@ -42,7 +42,7 @@ class TestTypicalGame(unittest.TestCase):
         nb_turns = 3
 
         for i in range(nb_turns):
-            self.game.single_tick()
+            self.game.custom_tick()
 
         self.game.click('player0')
         self.game.click('player1')
@@ -61,7 +61,7 @@ class TestTypicalGame(unittest.TestCase):
         nb_turns = 3
 
         for i in range(nb_turns):
-            self.game.single_tick()
+            self.game.custom_tick()
 
         for i in range(10):
             self.game.hit('player0', 'player1')
@@ -71,7 +71,7 @@ class TestTypicalGame(unittest.TestCase):
     def test_reset_players(self):
         for i in range(5):
             self.game.hit('player0', 'player1')
-        self.game.single_tick()
+        self.game.custom_tick()
         self.game.reset_players()
 
         self.assertTrue(all(True if player.hp == 100 else False for player in self.game._players.values()))
@@ -95,10 +95,10 @@ class TestTypicalGame(unittest.TestCase):
     def test_zone_shrinks_over_time(self):
         zone_range = self.game.map.zone.distance_to_be_affected
         for i in range(59):
-            self.game.single_tick()
+            self.game.custom_tick()
         self.assertEqual(self.game.map.zone.distance_to_be_affected, zone_range)
 
-        self.game.single_tick()
+        self.game.custom_tick()
         self.assertEqual(self.game.map.zone.distance_to_be_affected, zone_range-1)
 
     def test_tied_game(self):
@@ -106,7 +106,7 @@ class TestTypicalGame(unittest.TestCase):
         for player in self.game._players.values():
             player.enter_room(player0_room)
 
-        while self.game.single_tick():
+        while self.game.custom_tick():
             pass
 
         self.assertEqual(len(self.game.players_alive()), 0)
@@ -119,7 +119,7 @@ class TestTypicalGame(unittest.TestCase):
             player.enter_room(neighbor_room)
         self.game._players['player0'].enter_room(final_room)
 
-        while self.game.single_tick():
+        while self.game.custom_tick():
             pass
 
         self.assertEqual(len(self.game.players_alive()), 1)
