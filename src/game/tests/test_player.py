@@ -31,7 +31,7 @@ class TestPlayer(unittest.TestCase):
         self.player.click()
         self.player.income_tick()
         self.player.get_hit(10)
-        self.player.hits(self.player1, 10)
+        self.player.hits(self.player1)
 
         self.player.reset()
 
@@ -74,7 +74,7 @@ class TestPlayer(unittest.TestCase):
         self.assertEqual(self.player.hp, 90)
 
     def test_deals_damage(self):
-        self.player.hits(self.player1, 10)
+        self.player.hits(self.player1)
 
         self.assertEqual(self.player.total_damage_dealt, 10)
 
