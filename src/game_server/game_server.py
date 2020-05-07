@@ -7,6 +7,7 @@ import _thread
 import time
 import threading
 import json
+import collections
 
 # TODO: refactor execute + actions decoding + management into its own class
 
@@ -33,9 +34,17 @@ class GameServer:
         self.driver = None
         self.log_path = log_path
 
+        self.action_queue = collections.deque()
+
     def create_game(self, log_path):
         game = Game(log_path)
         self.driver = ProdDriver(game)
+
+    def execute_actions(self):
+        while self.driver.game.ongoing:
+            if self.action_queue:
+                action = self.action_queue.pop()
+                self.execute(action)
 
     def listen_before_game_actions(self, client_socket):
         while not self.driver.game.ongoing:
@@ -52,6 +61,10 @@ class GameServer:
                 print('starting game')
                 t = threading.Thread(target=self.driver.start_game)
                 t.start()
+
+                action_queue_thread = threading.Thread(target=self.execute_actions)
+                action_queue_thread.start()
+
 
     @staticmethod
     def decode_data(data):
@@ -102,7 +115,7 @@ class GameServer:
             try:
                 data = client_socket.recv(1024)
                 action = GameServer.decode_data(data)
-                self.execute(action)
+                self.action_queue.appendleft(action)
             except EndGameErrorException: # TODO: FIX
                 break
 
