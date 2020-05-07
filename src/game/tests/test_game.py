@@ -63,18 +63,14 @@ class TestTypicalGame(unittest.TestCase):
         for i in range(nb_turns):
             self.game.single_tick()
 
-        action = {
-            'damage': 100
-        }
-        self.game.hit('player0', 'player1', action)
+        for i in range(10):
+            self.game.hit('player0', 'player1')
         self.assertEqual([player.name for player in self.game.players_alive()], ['player0', 'player2'])
         self.assertFalse(self.game._players['player1'].is_alive())
 
     def test_reset_players(self):
-        action = {
-            'damage': 50
-        }
-        self.game.hit('player0', 'player1', action)
+        for i in range(5):
+            self.game.hit('player0', 'player1')
         self.game.single_tick()
         self.game.reset_players()
 

@@ -57,8 +57,8 @@ class Game:
     def is_over(self):
         return len(self.players_alive()) <= 1
 
-    def hit(self, from_user, to_user, action):
-        self._players[from_user].hits(self._players[to_user], action['damage'])
+    def hit(self, from_user, to_user):
+        self._players[from_user].hits(self._players[to_user])
         self.action_log()
 
     def action_log(self):

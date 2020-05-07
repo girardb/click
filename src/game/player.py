@@ -13,6 +13,7 @@ class Player:
         self.base_income = 1
         self.coins = 0
         self.base_click_value = 1
+        self.base_damage = 10
         self.bleed_amount = 0
         self.total_damage_dealt = 0
         self.current_room = None
@@ -49,6 +50,9 @@ class Player:
         room_income = self.current_room.income_bonus
         return self.base_income + upgrade_income + room_income
 
+    def get_outgoing_damage(self):
+        return self.base_damage
+
     def income_tick(self):
         self.coins += self.get_income()
 
@@ -62,11 +66,11 @@ class Player:
         self.hp -= damage
 
     # Should probably not take damage as input and calculate it from base_damage attributes or something
-    def hits(self, target, damage):
+    def hits(self, target):
         if target not in self.get_surrounding_players():
             raise PlayerNotInRoomException("This player is not in the same room as you.")
-        self.total_damage_dealt += damage
-        target.get_hit(damage)
+        self.total_damage_dealt += self.get_outgoing_damage()
+        target.get_hit(self.get_outgoing_damage())
 
     def buy_item(self, item):
         if self.coins < item.cost:

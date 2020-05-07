@@ -54,7 +54,7 @@ class TestRoom(unittest.TestCase):
         self.assertEqual(len(self.player0.current_room.players), 2)
 
     def test_a_player_can_only_interact_with_the_players_in_his_room__hits_throws(self):
-        self.assertRaises(PlayerNotInRoomException, partial(self.player0.hits, self.player1, 10))
+        self.assertRaises(PlayerNotInRoomException, partial(self.player0.hits, self.player1))
 
     def test_a_player_can_only_interact_with_the_players_in_his_room__consumable_throws(self):
         for i in range(10):
@@ -66,7 +66,7 @@ class TestRoom(unittest.TestCase):
     def test_a_player_can_only_interact_with_the_players_in_his_room__hits_works(self):
         self.player1.enter_room(self.player0.current_room)
 
-        self.player0.hits(self.player1, 10)
+        self.player0.hits(self.player1)
 
         self.assertEqual(self.player1.hp, self.player1.max_hp - 10)
 
