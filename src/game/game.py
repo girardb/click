@@ -1,4 +1,5 @@
 import json
+import math
 
 from src.game.player import Player
 from src.game.map import *
@@ -40,11 +41,11 @@ class Game:
     def start_game(self):
         self._pregame_setup()
 
-    def single_tick(self):
-        self.time += 1
-        self.income_tick()
-        self.bleed_players()
-        self.map.zone.update_zone(self.time)
+    def custom_tick(self, nb_ticks=1):
+        self.time += nb_ticks
+        self.income_tick(nb_ticks)
+        self.bleed_players(nb_ticks)
+        self.map.zone.update_zone(math.floor(self.time))
         self.log()
 
         if self.is_over() and not self.players_alive():
@@ -76,9 +77,9 @@ class Game:
         }
         return json.dumps(game_state)
 
-    def bleed_players(self):
+    def bleed_players(self, nb_ticks=1):
         for player in self.players_alive():
-            player.bleed()
+            player.bleed(nb_ticks)
 
     def reset_players(self):
         for player in self._players.values():
@@ -97,9 +98,9 @@ class Game:
         print('everyone is a loser :(')
         self.ongoing = False
 
-    def income_tick(self):
+    def income_tick(self, nb_ticks=1):
         for player in self.players_alive():
-            player.income_tick()
+            player.income_tick(nb_ticks)
 
 
 class EmptyGameException(Exception):

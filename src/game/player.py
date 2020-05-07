@@ -53,14 +53,14 @@ class Player:
     def get_outgoing_damage(self):
         return self.base_damage
 
-    def income_tick(self):
-        self.coins += self.get_income()
+    def income_tick(self, nb_ticks=1):
+        self.coins += self.get_income() * nb_ticks
 
     def click(self):
         self.coins += self.get_click_value()
 
-    def bleed(self):
-        self.hp -= self.current_room.damage + self.bleed_amount
+    def bleed(self, nb_ticks=1):
+        self.hp -= (self.current_room.damage + self.bleed_amount) * nb_ticks
 
     def get_hit(self, damage):
         self.hp -= damage
