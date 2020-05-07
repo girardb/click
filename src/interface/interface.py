@@ -26,7 +26,7 @@ class Interface:
 
         login_button = tk.Button(master=self.frame_whole_window,
                                  text="login",
-                                 command=partial(self.client.send_login, name=username))
+                                 command=partial(self.send_login, name_entry=username))
         login_button.grid()
         start_game_button = tk.Button(master=self.frame_whole_window,
                                       text="start game",
@@ -37,6 +37,10 @@ class Interface:
                                  command=self.client.send_click)
         click_button.grid()
         self.root.mainloop()
+
+    def send_login(self, name_entry):
+        username = name_entry.get()
+        self.client.send_login(username)
 
 
 if __name__ == '__main__':

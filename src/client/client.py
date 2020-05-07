@@ -3,6 +3,8 @@ import threading
 import time
 import json
 
+from src.interface.client_player import ClientPlayer
+
 
 class Client:
     def __init__(self):
@@ -20,20 +22,16 @@ class Client:
         self.action_socket = socket.socket()
         self.action_host = socket.gethostname()
         self.action_socket.connect((self.action_host, self.action_port))
+        self.player = None
 
-        self.name = 'unnamed'
-
-    def send_login(self, name):
-        self.set_name(name)
+    def send_login(self, username):
+        self.player = ClientPlayer(username)
         print('logging in')
         login_message = {
             'type': 'login',
-            'user': self.name
+            'user': self.player.name
         }
         self.action_socket.send(json.dumps(login_message).encode())
-
-    def set_name(self, name):
-        self.name = name
 
     def start_game(self):
         self.send_start_game()
@@ -46,6 +44,63 @@ class Client:
             'type': 'start'
         }
         self.action_socket.send(json.dumps(start_message).encode())
+
+    def send_click(self):
+        action = {
+            'type': 'action',
+            'content': 'click',
+            'user': self.player.name
+        }
+        self.action_socket.send(json.dumps(action).encode())
+
+    def send_hits(self, target):
+        action = {
+            'type': 'action',
+            'content': 'hits',
+            'target': target,
+            'user': self.player.name
+        }
+        self.action_socket.send(json.dumps(action).encode())
+
+    def send_buy_item(self, item_type, item_effect):
+        action = {
+            'type': 'buy',
+            'content': 'buy',
+            'item_type': item_type,
+            'item_effect': item_effect,
+            'user': self.player.name
+        }
+        self.action_socket.send(json.dumps(action).encode())
+
+    def send_upgrade(self, upgrade_type, upgrade_level):
+        action = {
+            'type': 'action',
+            'content': 'upgrade',
+            'upgrade_type': upgrade_type,
+            'upgrade_level': upgrade_level,
+            'user': self.player.name
+        }
+        self.action_socket.send(json.dumps(action).encode())
+
+    def send_use_item(self, target, item_type, item_effect):
+        action = {
+            'type': 'action',
+            'content': 'use_item',
+            'target': target,
+            'item_type': item_type,
+            'item_effect': item_effect,
+            'user': self.player.name
+        }
+        self.action_socket.send(json.dumps(action).encode())
+
+    def send_enter_room(self, room_index):
+        action = {
+            'type': 'action',
+            'content': 'enter_room',
+            'room_index': room_index,
+            'user': self.player.name
+        }
+        self.action_socket.send(json.dumps(action).encode())
 
     def start_sockets(self):
         t1 = threading.Thread(target=self.start_game_updates_socket)
@@ -91,14 +146,6 @@ class Client:
             # self.action_socket.send(msg)
             pass
         self.action_socket.close()
-
-    def send_click(self):
-        action = {
-            'type': 'action',
-            'content': 'click',
-            'user': self.name
-        }
-        self.action_socket.send(json.dumps(action).encode())
 
     @staticmethod
     def decode_data(data):
