@@ -4,6 +4,7 @@ import time
 class Driver:
     def __init__(self, game):
         self.game = game
+        self.ticks_per_second = 1
 
     def start_game(self):
         self.game.start_game()
