@@ -3,26 +3,19 @@ from src.game.driver import Driver
 from src.game.tests.test_game import create_players
 
 import unittest
+from unittest.mock import patch, Mock
 
 
+@patch("time.sleep", Mock())
 class TestDrivingGame(unittest.TestCase):
     def setUp(self) -> None:
         game = Game()
-        self.driver = TestDriver(game)
+        self.driver = Driver(game)
 
     def test_game_is_over(self):
         create_players(self.driver.game, 3)
         self.driver.start_game()
         self.assertFalse(self.driver.game.ongoing)
-
-
-class TestDriver(Driver):
-    """
-    Runs game for tests
-    """
-    def _play_game(self):
-        while self.game.single_tick():
-            pass
 
 
 if __name__ == '__main__':

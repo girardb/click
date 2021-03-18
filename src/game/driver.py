@@ -10,17 +10,8 @@ class Driver:
         self._play_game()
 
     def _play_game(self):
-        raise NotImplementedError()
-
-
-class ProdDriver(Driver):
-    """
-    Runs 'real' games
-    """
-    def _play_game(self):
         while self.game.single_tick():
             time.sleep(1)
-
 
 class PlaybackDriver:
     """
