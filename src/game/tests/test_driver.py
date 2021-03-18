@@ -10,7 +10,7 @@ from unittest.mock import patch, Mock
 class TestDrivingGame(unittest.TestCase):
     def setUp(self) -> None:
         game = Game()
-        self.driver = Driver()
+        self.driver = Driver(game)
 
     def test_game_is_over(self):
         create_players(self.driver.game, 3)
