@@ -3,7 +3,7 @@ from src.game.driver import Driver
 from src.game.tests.test_game import create_players
 
 import unittest
-from unittest.mock import path, Mock
+from unittest.mock import patch, Mock
 
 
 @patch("time.sleep", Mock())
